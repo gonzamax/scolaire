@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fractions — Quiz 4e</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f7f4ff;--surface:#ffffff;--surface2:#f0ecff;
+  --ink:#1a1730;--ink2:#4a4568;--ink3:#9590b0;
+  --border:#e2ddf5;--border2:#c8c0ee;
+  --purple:#6c47ff;--purple-light:#ede8ff;--purple-mid:#b8a8ff;
+  --teal:#00b8a9;--teal-light:#e0f7f5;
+  --coral:#ff6b6b;--coral-light:#fff0f0;
+  --amber:#ffb347;--amber-light:#fff8ee;
+  --green:#2ec48e;--green-light:#e6faf3;
+  --radius:10px;--radius-lg:18px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--ink);font-family:'Nunito',sans-serif;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:0 1rem 4rem;}
+
+header{width:100%;max-width:700px;padding:2.5rem 0 2rem;text-align:center;}
+.header-tag{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--purple);margin-bottom:.6rem;}
+h1{font-size:clamp(1.8rem,5vw,2.6rem);font-weight:800;color:var(--ink);line-height:1.1;margin-bottom:.5rem;}
+h1 span{color:var(--purple);}
+.header-sub{font-size:14px;color:var(--ink3);line-height:1.6;}
+
+/* tabs */
+.tabs{width:100%;max-width:700px;display:flex;gap:8px;margin-bottom:1.5rem;flex-wrap:wrap;}
+.tab-btn{flex:1;min-width:140px;padding:.65rem .8rem;background:var(--surface);border:2px solid var(--border2);border-radius:var(--radius);font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;color:var(--ink3);cursor:pointer;transition:all .15s;display:flex;align-items:center;justify-content:center;gap:6px;}
+.tab-btn:hover{border-color:var(--purple-mid);color:var(--ink);}
+.tab-btn.active{background:var(--purple);border-color:var(--purple);color:#fff;}
+.tab-dot{width:8px;height:8px;border-radius:50%;}
+.tab-btn.active .tab-dot{background:rgba(255,255,255,.5);}
+.tab-dot.t1{background:var(--teal);}
+.tab-dot.t2{background:var(--coral);}
+.tab-dot.t3{background:var(--amber);}
+.tab-dot.t4{background:var(--green);}
+
+/* progress */
+.prog-wrap{width:100%;max-width:700px;margin-bottom:1.5rem;}
+.prog-meta{display:flex;justify-content:space-between;font-size:12px;font-family:'JetBrains Mono',monospace;color:var(--ink3);margin-bottom:6px;}
+.prog-track{height:6px;background:var(--border);border-radius:99px;overflow:hidden;}
+.prog-fill{height:100%;background:var(--purple);border-radius:99px;transition:width .4s cubic-bezier(.4,0,.2,1);}
+
+/* card */
+.quiz-card{width:100%;max-width:700px;background:var(--surface);border:2px solid var(--border2);border-radius:var(--radius-lg);overflow:hidden;animation:slideIn .3s ease;}
+@keyframes slideIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+.card-top{padding:1.25rem 1.5rem 1rem;border-bottom:1.5px solid var(--border);}
+.ctx-label{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);margin-bottom:.4rem;}
+.ctx-box{font-size:13px;color:var(--ink2);background:var(--surface2);border-radius:var(--radius);padding:10px 14px;border-left:3px solid var(--purple-mid);line-height:1.6;}
+.card-body{padding:1.25rem 1.5rem;}
+.q-num{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--purple);letter-spacing:.06em;margin-bottom:.5rem;}
+.q-text{font-size:1.15rem;font-weight:700;color:var(--ink);line-height:1.4;margin-bottom:1.25rem;}
+
+/* fraction display */
+.frac{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;margin:0 3px;line-height:1.1;}
+.frac .num,.frac .den{display:block;text-align:center;font-weight:700;}
+.frac .bar{width:100%;height:2px;background:currentColor;margin:1px 0;}
+
+/* choices */
+.choices{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:1.25rem;}
+@media(max-width:480px){.choices{grid-template-columns:1fr;}}
+.choice{background:var(--surface2);border:2px solid var(--border2);border-radius:var(--radius);padding:12px 14px;font-size:1rem;font-weight:700;font-family:'Nunito',sans-serif;cursor:pointer;text-align:center;transition:all .12s;display:flex;align-items:center;justify-content:center;gap:4px;min-height:54px;}
+.choice:hover:not(:disabled){background:var(--purple-light);border-color:var(--purple-mid);transform:translateY(-1px);}
+.choice:disabled{cursor:default;}
+.choice.correct{background:var(--green-light);border-color:var(--green);color:var(--green);}
+.choice.wrong{background:var(--coral-light);border-color:var(--coral);color:var(--coral);text-decoration:line-through;opacity:.7;}
+
+/* feedback */
+.feedback{border-radius:var(--radius);padding:12px 14px;font-size:13px;line-height:1.7;margin-bottom:1.25rem;display:none;animation:fadeIn .2s ease;}
+@keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
+.feedback.show{display:block;}
+.feedback.ok{background:var(--green-light);border:1.5px solid var(--green);color:#1a6b4a;}
+.feedback.ko{background:var(--coral-light);border:1.5px solid var(--coral);color:#9b2335;}
+.fb-head{font-weight:800;margin-bottom:4px;display:flex;align-items:center;gap:6px;font-size:13px;}
+.fb-badge{width:18px;height:18px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;flex-shrink:0;}
+.fb-badge.ok{background:var(--green);color:#fff;}
+.fb-badge.ko{background:var(--coral);color:#fff;}
+.reflex{background:rgba(108,71,255,.08);border-left:2px solid var(--purple);border-radius:0 var(--radius) var(--radius) 0;padding:8px 12px;font-size:12.5px;color:var(--purple);line-height:1.6;margin-top:8px;font-weight:600;}
+code{font-family:'JetBrains Mono',monospace;font-size:12px;background:rgba(0,0,0,.06);padding:1px 5px;border-radius:4px;}
+
+.next-btn{background:var(--purple);color:#fff;border:none;border-radius:var(--radius);padding:11px 26px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;cursor:pointer;display:none;transition:opacity .15s,transform .1s;letter-spacing:.3px;}
+.next-btn:hover{opacity:.9;transform:translateY(-1px);}
+.next-btn.show{display:inline-block;}
+
+/* score */
+.score-screen{width:100%;max-width:700px;display:none;animation:slideIn .4s ease;}
+.score-screen.show{display:block;}
+.score-hero{background:var(--surface);border:2px solid var(--border2);border-radius:var(--radius-lg);padding:2.5rem 2rem;text-align:center;margin-bottom:1.25rem;}
+.score-frac{font-size:5rem;font-weight:800;line-height:1;margin-bottom:.4rem;color:var(--ink);}
+.score-frac span{color:var(--purple);}
+.score-frac .denom{color:var(--ink3);font-size:3rem;}
+.score-msg{font-size:15px;color:var(--ink3);max-width:380px;margin:.5rem auto 1.5rem;line-height:1.6;}
+.score-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;}
+.btn-restart{background:transparent;color:var(--ink);border:2px solid var(--border2);border-radius:var(--radius);padding:10px 22px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:background .15s;}
+.btn-restart:hover{background:var(--surface2);}
+.btn-next-op{background:var(--teal);color:#fff;border:none;border-radius:var(--radius);padding:10px 22px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:opacity .15s;}
+.btn-next-op:hover{opacity:.88;}
+.recap{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:8px;}
+.recap-item{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius);padding:10px 12px;display:flex;align-items:flex-start;gap:8px;}
+.rdot{width:8px;height:8px;border-radius:50%;margin-top:5px;flex-shrink:0;}
+.rdot.ok{background:var(--green);}
+.rdot.ko{background:var(--coral);}
+.rq{font-size:12px;color:var(--ink3);line-height:1.4;}
+.rq strong{color:var(--ink);display:block;font-size:13px;margin-bottom:1px;}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-tag">Mathématiques · 4e · Cycle 4</div>
+  <h1>Fractions —<br><span>Quelle opération, quelle règle ?</span></h1>
+  <p class="header-sub">10 questions par opération. Pour chaque calcul : identifier la bonne méthode avant de répondre.</p>
+</header>
+
+<div class="tabs" id="tabs">
+  <button class="tab-btn active" onclick="switchOp(0,this)"><span class="tab-dot t1"></span>Addition / Sous.</button>
+  <button class="tab-btn" onclick="switchOp(1,this)"><span class="tab-dot t2"></span>Multiplication</button>
+  <button class="tab-btn" onclick="switchOp(2,this)"><span class="tab-dot t3"></span>Division</button>
+  <button class="tab-btn" onclick="switchOp(3,this)"><span class="tab-dot t4"></span>Simplification</button>
+</div>
+
+<div class="prog-wrap" id="prog-wrap">
+  <div class="prog-meta"><span id="prog-label">Question 1 / 10</span><span id="prog-score">0 bonne(s)</span></div>
+  <div class="prog-track"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
+</div>
+
+<div class="quiz-card" id="quiz-card">
+  <div class="card-top">
+    <div class="ctx-label">Règle à retenir</div>
+    <div class="ctx-box" id="q-ctx"></div>
+  </div>
+  <div class="card-body">
+    <div class="q-num" id="q-num"></div>
+    <div class="q-text" id="q-text"></div>
+    <div class="choices" id="choices"></div>
+    <div class="feedback" id="feedback">
+      <div class="fb-head"><span class="fb-badge" id="fb-badge"></span><span id="fb-head"></span></div>
+      <div id="fb-body"></div>
+      <div class="reflex" id="fb-reflex" style="display:none"></div>
+    </div>
+    <button class="next-btn" id="next-btn" onclick="nextQ()">Question suivante →</button>
+  </div>
+</div>
+
+<div class="score-screen" id="score-screen">
+  <div class="score-hero">
+    <div class="score-frac" id="score-frac"></div>
+    <p class="score-msg" id="score-msg"></p>
+    <div class="score-actions">
+      <button class="btn-restart" onclick="restart()">↺ Recommencer</button>
+      <button class="btn-next-op" id="btn-next-op" onclick="goNextOp()">Opération suivante →</button>
+    </div>
+  </div>
+  <div class="recap" id="recap"></div>
+</div>
+
+<script>
+function frac(n,d){return `<span class="frac"><span class="num">${n}</span><span class="bar"></span><span class="den">${d}</span></span>`;}
+
+const OPS = [
+  /* 0 — Addition / Soustraction */
+  {
+    label:"Addition / Soustraction",
+    color:"teal",
+    questions:[
+      {ctx:"Dénominateurs identiques : on additionne (ou soustrait) les numérateurs et on garde le dénominateur.",
+       q:`Calcule ${frac(2,5)} + ${frac(1,5)} = ?`,
+       choices:[`${frac(3,10)}`,`${frac(3,5)}`,`${frac(2,25)}`,`${frac(1,5)}`],correct:1,
+       ok:"Bravo ! Les dénominateurs sont identiques (5 = 5) → on additionne les numérateurs : 2 + 1 = 3.",
+       ko:`Les dénominateurs sont identiques : on ne les additionne PAS. On garde 5 et on calcule 2 + 1 = 3. Résultat : ${frac(3,5)}.`,
+       reflex:"Dénominateurs égaux → additionner/soustraire les numérateurs, copier le dénominateur."},
+      {ctx:"Dénominateurs identiques : on additionne (ou soustrait) les numérateurs et on garde le dénominateur.",
+       q:`Calcule ${frac(3,7)} + ${frac(2,7)} = ?`,
+       choices:[`${frac(5,7)}`,`${frac(5,14)}`,`${frac(6,49)}`,`${frac(1,7)}`],correct:0,
+       ok:`Parfait ! 3 + 2 = 5, on garde 7. Résultat : ${frac(5,7)}.`,
+       ko:`Dénominateurs identiques (7 = 7) → on additionne 3 + 2 = 5 et on garde 7. Résultat : ${frac(5,7)}.`,
+       reflex:"Si les dénominateurs sont déjà égaux, il n'y a rien à faire en dessous."},
+      {ctx:"Dénominateurs différents : chercher le dénominateur commun (le plus petit multiple commun).",
+       q:`Calcule ${frac(1,3)} + ${frac(1,4)} = ?`,
+       choices:[`${frac(2,7)}`,`${frac(2,12)}`,`${frac(7,12)}`,`${frac(5,12)}`],correct:2,
+       ok:`Excellent ! Dénominateur commun = 12. ${frac(1,3)}=${frac(4,12)} et ${frac(1,4)}=${frac(3,12)}. Donc 4+3=7 → ${frac(7,12)}.`,
+       ko:`Dénominateurs différents ! PGCD(3,4)=1, dénominateur commun = 12. ${frac(1,3)}=${frac(4,12)}, ${frac(1,4)}=${frac(3,12)}. Total : ${frac(7,12)}.`,
+       reflex:"Erreur classique : additionner 1+1=2 et 3+4=7 → donne 2/7. FAUX. Toujours mettre au même dénominateur d'abord."},
+      {ctx:"Dénominateurs différents : chercher le dénominateur commun (le plus petit multiple commun).",
+       q:`Calcule ${frac(1,2)} + ${frac(2,3)} = ?`,
+       choices:[`${frac(3,5)}`,`${frac(7,6)}`,`${frac(3,6)}`,`${frac(5,6)}`],correct:1,
+       ok:`Super ! Dénominateur commun = 6. ${frac(1,2)}=${frac(3,6)}, ${frac(2,3)}=${frac(4,6)}. Total : ${frac(7,6)}.`,
+       ko:`Dénominateur commun = 6. ${frac(1,2)}=${frac(3,6)}, ${frac(2,3)}=${frac(4,6)}. 3+4=7 → ${frac(7,6)}.`,
+       reflex:"Le résultat peut être supérieur à 1 (fraction impropre). C'est normal !"},
+      {ctx:"Dénominateurs identiques : on soustrait les numérateurs et on garde le dénominateur.",
+       q:`Calcule ${frac(3,4)} − ${frac(1,4)} = ?`,
+       choices:[`${frac(2,4)}`,`${frac(3,4)}`,`${frac(1,2)}`,`${frac(2,8)}`],correct:2,
+       ok:`Correct ! 3−1=2, on garde 4 → ${frac(2,4)} = ${frac(1,2)} après simplification.`,
+       ko:`3−1=2 et on garde 4 → ${frac(2,4)}. On peut simplifier : ${frac(2,4)}=${frac(1,2)}.`,
+       reflex:"Après le calcul, vérifier si on peut simplifier le résultat."},
+      {ctx:"Dénominateurs différents : transformer pour avoir le même dénominateur.",
+       q:`Calcule ${frac(5,6)} − ${frac(1,3)} = ?`,
+       choices:[`${frac(4,3)}`,`${frac(1,2)}`,`${frac(4,6)}`,`${frac(1,3)}`],correct:1,
+       ok:`Bien ! ${frac(1,3)}=${frac(2,6)}. Donc ${frac(5,6)}−${frac(2,6)}=${frac(3,6)}=${frac(1,2)}.`,
+       ko:`Il faut mettre au dénominateur 6. ${frac(1,3)}=${frac(2,6)}. Donc 5−2=3 → ${frac(3,6)}=${frac(1,2)}.`,
+       reflex:"Reconnaître que 3 est un diviseur de 6 : multiplier numérateur et dénominateur de 1/3 par 2."},
+      {ctx:"Dénominateurs différents : transformer pour avoir le même dénominateur.",
+       q:`Calcule ${frac(7,10)} − ${frac(2,5)} = ?`,
+       choices:[`${frac(5,5)}`,`${frac(3,10)}`,`${frac(5,10)}`,`${frac(1,2)}`],correct:1,
+       ok:`Super ! ${frac(2,5)}=${frac(4,10)}. 7−4=3 → ${frac(3,10)}.`,
+       ko:`Dénominateur commun = 10. ${frac(2,5)}=${frac(4,10)}. 7−4=3 → ${frac(3,10)}.`,
+       reflex:"5 divise 10 : multiplier 2/5 par 2/2 pour obtenir 4/10."},
+      {ctx:"Soustraire une fraction à un entier : l'écrire sous forme fractionnaire avec le même dénominateur.",
+       q:`Calcule 1 − ${frac(3,8)} = ?`,
+       choices:[`${frac(5,8)}`,`${frac(4,8)}`,`${frac(3,7)}`,`${frac(7,8)}`],correct:0,
+       ok:`Bien ! 1 = ${frac(8,8)}. ${frac(8,8)}−${frac(3,8)}=${frac(5,8)}.`,
+       ko:`Écrire 1 = ${frac(8,8)}. Puis ${frac(8,8)}−${frac(3,8)}=${frac(5,8)}.`,
+       reflex:"Pour soustraire une fraction à un entier, écrire l'entier avec le même dénominateur : 1 = n/n."},
+      {ctx:"Additionner un entier et une fraction : l'écrire sous forme fractionnaire avec le même dénominateur.",
+       q:`Calcule 2 + ${frac(3,4)} = ?`,
+       choices:[`${frac(5,4)}`,`${frac(11,4)}`,`${frac(8,4)}`,`${frac(9,4)}`],correct:1,
+       ok:`Parfait ! 2 = ${frac(8,4)}. ${frac(8,4)}+${frac(3,4)}=${frac(11,4)}.`,
+       ko:`2 = ${frac(8,4)}. ${frac(8,4)}+${frac(3,4)}=${frac(11,4)}.`,
+       reflex:"2 = 8/4. Vérifier : 11/4 = 2,75. C'est bien 2 + 0,75 = 2,75 ✓"},
+      {ctx:"Rappel complet : identifier si les dénominateurs sont égaux ou non avant de calculer.",
+       q:`Calcule ${frac(2,3)} + ${frac(5,6)} = ?`,
+       choices:[`${frac(7,9)}`,`${frac(7,6)}`,`${frac(3,2)}`,`${frac(9,6)}`],correct:2,
+       ok:`Excellent ! ${frac(2,3)}=${frac(4,6)}. ${frac(4,6)}+${frac(5,6)}=${frac(9,6)}=${frac(3,2)}.`,
+       ko:`Dénominateur commun = 6. ${frac(2,3)}=${frac(4,6)}. 4+5=9 → ${frac(9,6)}=${frac(3,2)}.`,
+       reflex:"Simplifier le résultat : 9/6 → diviser par 3 → 3/2."},
+    ]
+  },
+  /* 1 — Multiplication */
+  {
+    label:"Multiplication",
+    color:"coral",
+    questions:[
+      {ctx:"Multiplication : numérateur × numérateur, dénominateur × dénominateur. Pas besoin de dénominateur commun !",
+       q:`Calcule ${frac(2,3)} × ${frac(3,4)} = ?`,
+       choices:[`${frac(5,7)}`,`${frac(6,7)}`,`${frac(1,2)}`,`${frac(2,4)}`],correct:2,
+       ok:`Super ! 2×3=6 et 3×4=12 → ${frac(6,12)}=${frac(1,2)}. On peut aussi simplifier en croix : 3/3=1.`,
+       ko:`Multiplication : 2×3=6 et 3×4=12 → ${frac(6,12)}=${frac(1,2)}. Astuce : simplifier 3 et 3 en croix dès le départ.`,
+       reflex:"Multiplication ≠ addition ! On ne cherche PAS de dénominateur commun. On multiplie directement."},
+      {ctx:"Multiplication : simplifier en croix avant de multiplier pour faciliter le calcul.",
+       q:`Calcule ${frac(3,5)} × ${frac(2,3)} = ?`,
+       choices:[`${frac(6,8)}`,`${frac(2,5)}`,`${frac(6,15)}`,`${frac(5,3)}`],correct:1,
+       ok:`Parfait ! 3×2=6 et 5×3=15 → ${frac(6,15)}=${frac(2,5)}. En croix : les 3 se simplifient → ${frac(1,5)}×${frac(2,1)}=${frac(2,5)}.`,
+       ko:`3×2=6 et 5×3=15 → ${frac(6,15)}=${frac(2,5)}. Astuce : les deux 3 se simplifient en croix.`,
+       reflex:"Simplification en croix : un 3 au numérateur et un 3 au dénominateur → on peut les supprimer avant de multiplier."},
+      {ctx:"Multiplication : numérateur × numérateur, dénominateur × dénominateur.",
+       q:`Calcule ${frac(4,7)} × ${frac(7,8)} = ?`,
+       choices:[`${frac(11,15)}`,`${frac(28,56)}`,`${frac(1,2)}`,`${frac(3,4)}`],correct:2,
+       ok:`Bravo ! 4×7=28 et 7×8=56 → ${frac(28,56)}=${frac(1,2)}. En croix : 7 et 7 se simplifient, 4 et 8 donnent 1/2.`,
+       ko:`4×7=28 et 7×8=56 → ${frac(28,56)}=${frac(1,2)}.`,
+       reflex:"Toujours simplifier le résultat. 28/56 : les deux se divisent par 28 → 1/2."},
+      {ctx:"Multiplication : numérateur × numérateur, dénominateur × dénominateur. Simplifier après.",
+       q:`Calcule ${frac(5,6)} × ${frac(3,10)} = ?`,
+       choices:[`${frac(15,16)}`,`${frac(1,4)}`,`${frac(8,16)}`,`${frac(15,60)}`],correct:1,
+       ok:`Excellent ! 5×3=15 et 6×10=60 → ${frac(15,60)}=${frac(1,4)}.`,
+       ko:`5×3=15 et 6×10=60 → ${frac(15,60)}. On simplifie par 15 → ${frac(1,4)}.`,
+       reflex:"Simplifier en croix : 5 et 10 donnent 1 et 2 ; 3 et 6 donnent 1 et 2. ${frac(1,2)}×${frac(1,2)}=${frac(1,4)}."},
+      {ctx:"Multiplier une fraction par un entier : écrire l'entier sous forme fractionnaire (n = n/1).",
+       q:`Calcule ${frac(3,4)} × 8 = ?`,
+       choices:["8","9","6","3"],correct:2,
+       ok:`Parfait ! ${frac(3,4)} × ${frac(8,1)} = ${frac(24,4)} = 6. Ou : 8 ÷ 4 × 3 = 2 × 3 = 6.`,
+       ko:`${frac(3,4)} × 8 = ${frac(3×8,4)} = ${frac(24,4)} = 6.`,
+       reflex:"Multiplier par un entier : 3/4 × 8 = (3 × 8)/4 = 24/4 = 6. Raccourci : 8/4 = 2, puis 2 × 3 = 6."},
+      {ctx:"Multiplication : attention à ne pas confondre avec l'addition.",
+       q:`Calcule ${frac(2,5)} × ${frac(5,3)} = ?`,
+       choices:[`${frac(7,8)}`,`${frac(10,15)}`,`${frac(2,3)}`,`${frac(4,15)}`],correct:2,
+       ok:`Bien ! 2×5=10 et 5×3=15 → ${frac(10,15)}=${frac(2,3)}. En croix : les 5 se simplifient.`,
+       ko:`2×5=10 et 5×3=15 → ${frac(10,15)}=${frac(2,3)}.`,
+       reflex:"Les deux 5 se simplifient en croix : reste 2/1 × 1/3 = 2/3."},
+      {ctx:"Multiplication : numérateur × numérateur, dénominateur × dénominateur.",
+       q:`Calcule ${frac(1,3)} × ${frac(1,4)} = ?`,
+       choices:[`${frac(2,7)}`,`${frac(1,12)}`,`${frac(1,7)}`,`${frac(2,12)}`],correct:1,
+       ok:`Correct ! 1×1=1 et 3×4=12 → ${frac(1,12)}.`,
+       ko:`1×1=1 et 3×4=12 → ${frac(1,12)}.`,
+       reflex:"Le résultat est plus petit que chaque fraction de départ. C'est normal avec la multiplication de fractions < 1."},
+      {ctx:"Multiplier deux fractions : pas de dénominateur commun, on multiplie directement.",
+       q:`Calcule ${frac(3,4)} × ${frac(8,9)} = ?`,
+       choices:[`${frac(11,13)}`,`${frac(24,36)}`,`${frac(2,3)}`,`${frac(1,3)}`],correct:2,
+       ok:`Parfait ! 3×8=24 et 4×9=36 → ${frac(24,36)}=${frac(2,3)}.`,
+       ko:`3×8=24 et 4×9=36 → ${frac(24,36)}=${frac(2,3)}.`,
+       reflex:"Simplification en croix : 3 et 9 donnent 1 et 3 ; 8 et 4 donnent 2 et 1. Reste 1/3 × 2/1 = 2/3."},
+      {ctx:"Multiplier deux fractions : simplifier en croix si possible.",
+       q:`Calcule ${frac(5,9)} × ${frac(3,10)} = ?`,
+       choices:[`${frac(8,19)}`,`${frac(15,90)}`,`${frac(1,6)}`,`${frac(1,3)}`],correct:2,
+       ok:`Super ! 5×3=15 et 9×10=90 → ${frac(15,90)}=${frac(1,6)}.`,
+       ko:`5×3=15 et 9×10=90 → ${frac(15,90)}. Simplifier par 15 → ${frac(1,6)}.`,
+       reflex:"Simplification en croix : 5 et 10 → 1 et 2 ; 3 et 9 → 1 et 3. Reste 1/3 × 1/2 = 1/6."},
+      {ctx:"Rappel multiplication : jamais de dénominateur commun, on multiplie terme à terme.",
+       q:`Calcule ${frac(4,5)} ÷ ${frac(8,15)} (en multipliant par l'inverse) = ?`,
+       choices:[`${frac(32,75)}`,`${frac(3,2)}`,`${frac(2,3)}`,`${frac(12,40)}`],correct:1,
+       ok:`Excellent ! Division = multiplier par l'inverse : ${frac(4,5)} × ${frac(15,8)} = ${frac(60,40)} = ${frac(3,2)}.`,
+       ko:`Division : multiplier par l'inverse de ${frac(8,15)}, soit ${frac(15,8)}. ${frac(4,5)}×${frac(15,8)}=${frac(60,40)}=${frac(3,2)}.`,
+       reflex:"On répète ici la règle de la division pour préparer la prochaine section : diviser = multiplier par l'inverse."},
+    ]
+  },
+  /* 2 — Division */
+  {
+    label:"Division",
+    color:"amber",
+    questions:[
+      {ctx:"Division : on garde la première fraction et on multiplie par l'inverse de la seconde (on retourne la 2e).",
+       q:`Calcule ${frac(3,4)} ÷ ${frac(1,2)} = ?`,
+       choices:[`${frac(3,8)}`,`${frac(3,2)}`,`${frac(1,4)}`,`${frac(4,3)}`],correct:1,
+       ok:`Parfait ! ${frac(3,4)} × ${frac(2,1)} = ${frac(6,4)} = ${frac(3,2)}.`,
+       ko:`Diviser par ${frac(1,2)}, c'est multiplier par ${frac(2,1)}. ${frac(3,4)}×${frac(2,1)}=${frac(6,4)}=${frac(3,2)}.`,
+       reflex:"Mémo : 'Je divise, je retourne la 2e fraction, je multiplie.' Les deux étapes suivantes sont une multiplication normale."},
+      {ctx:"Division : retourner la fraction de droite, puis multiplier.",
+       q:`Calcule ${frac(2,3)} ÷ ${frac(4,5)} = ?`,
+       choices:[`${frac(8,15)}`,`${frac(5,6)}`,`${frac(10,12)}`,`${frac(4,6)}`],correct:1,
+       ok:`Bien ! ${frac(2,3)} × ${frac(5,4)} = ${frac(10,12)} = ${frac(5,6)}.`,
+       ko:`Inverser ${frac(4,5)} → ${frac(5,4)}. Puis ${frac(2,3)}×${frac(5,4)}=${frac(10,12)}=${frac(5,6)}.`,
+       reflex:"On retourne la fraction DE DROITE uniquement. Erreur fréquente : retourner la fraction de gauche."},
+      {ctx:"Division : retourner la fraction de droite, puis multiplier.",
+       q:`Calcule ${frac(5,6)} ÷ ${frac(5,3)} = ?`,
+       choices:[`${frac(25,18)}`,`${frac(5,2)}`,`${frac(1,2)}`,`${frac(10,6)}`],correct:2,
+       ok:`Super ! ${frac(5,6)} × ${frac(3,5)} = ${frac(15,30)} = ${frac(1,2)}.`,
+       ko:`Inverser ${frac(5,3)} → ${frac(3,5)}. Puis ${frac(5,6)}×${frac(3,5)}=${frac(15,30)}=${frac(1,2)}.`,
+       reflex:"Les deux 5 se simplifient en croix : reste 1/6 × 3/1 = 3/6 = 1/2."},
+      {ctx:"Diviser une fraction par un entier : l'entier devient 1/entier (son inverse).",
+       q:`Calcule ${frac(3,4)} ÷ 3 = ?`,
+       choices:[`${frac(9,4)}`,`${frac(1,4)}`,`${frac(3,12)}`,`${frac(4,3)}`],correct:1,
+       ok:`Correct ! ÷3 = ×${frac(1,3)}. ${frac(3,4)}×${frac(1,3)}=${frac(3,12)}=${frac(1,4)}.`,
+       ko:`Diviser par 3 = multiplier par ${frac(1,3)}. ${frac(3,4)}×${frac(1,3)}=${frac(3,12)}=${frac(1,4)}.`,
+       reflex:"Diviser par un entier n = multiplier par 1/n. Ici ÷3 = ×(1/3)."},
+      {ctx:"Division : retourner la fraction de droite, puis multiplier.",
+       q:`Calcule ${frac(7,8)} ÷ ${frac(7,4)} = ?`,
+       choices:[`${frac(49,32)}`,`${frac(7,2)}`,`${frac(1,2)}`,`${frac(4,8)}`],correct:2,
+       ok:`Excellent ! ${frac(7,8)} × ${frac(4,7)} = ${frac(28,56)} = ${frac(1,2)}.`,
+       ko:`Inverser ${frac(7,4)} → ${frac(4,7)}. Puis ${frac(7,8)}×${frac(4,7)}=${frac(28,56)}=${frac(1,2)}.`,
+       reflex:"Simplification en croix : les 7 se simplifient, 4 et 8 donnent 1/2."},
+      {ctx:"Diviser une fraction par un entier.",
+       q:`Calcule ${frac(4,5)} ÷ 2 = ?`,
+       choices:[`${frac(8,5)}`,`${frac(4,10)}`,`${frac(2,5)}`,`${frac(5,4)}`],correct:2,
+       ok:`Bien ! ${frac(4,5)}×${frac(1,2)}=${frac(4,10)}=${frac(2,5)}.`,
+       ko:`÷2 = ×${frac(1,2)}. ${frac(4,5)}×${frac(1,2)}=${frac(4,10)}=${frac(2,5)}.`,
+       reflex:"${frac(4,10)} et ${frac(2,5)} : diviser par 2 → même résultat. Toujours simplifier."},
+      {ctx:"Division : le résultat peut être un entier. Toujours simplifier.",
+       q:`Calcule ${frac(2,3)} ÷ ${frac(2,9)} = ?`,
+       choices:["9","3","6","1"],correct:1,
+       ok:`Super ! ${frac(2,3)}×${frac(9,2)}=${frac(18,6)}=3.`,
+       ko:`Inverser ${frac(2,9)} → ${frac(9,2)}. Puis ${frac(2,3)}×${frac(9,2)}=${frac(18,6)}=3.`,
+       reflex:"La division de deux fractions peut donner un entier. 18/6 = 3."},
+      {ctx:"Division : retourner la fraction de droite, puis multiplier.",
+       q:`Calcule ${frac(5,6)} ÷ ${frac(5,4)} = ?`,
+       choices:[`${frac(25,24)}`,`${frac(2,3)}`,`${frac(1,2)}`,`${frac(20,30)}`],correct:1,
+       ok:`Parfait ! ${frac(5,6)}×${frac(4,5)}=${frac(20,30)}=${frac(2,3)}.`,
+       ko:`Inverser ${frac(5,4)} → ${frac(4,5)}. Puis ${frac(5,6)}×${frac(4,5)}=${frac(20,30)}=${frac(2,3)}.`,
+       reflex:"Les deux 5 se simplifient : reste ${frac(1,6)}×${frac(4,1)}=${frac(4,6)}=${frac(2,3)}."},
+      {ctx:"Division : identifier quelle fraction on retourne.",
+       q:`Calcule ${frac(3,8)} ÷ ${frac(9,4)} = ?`,
+       choices:[`${frac(27,32)}`,`${frac(1,6)}`,`${frac(12,72)}`,`${frac(9,8)}`],correct:1,
+       ok:`Correct ! ${frac(3,8)}×${frac(4,9)}=${frac(12,72)}=${frac(1,6)}.`,
+       ko:`Inverser ${frac(9,4)} → ${frac(4,9)}. Puis ${frac(3,8)}×${frac(4,9)}=${frac(12,72)}=${frac(1,6)}.`,
+       reflex:"Simplification : 3 et 9 donnent 1/3 ; 4 et 8 donnent 1/2. Reste 1/3 × 1/2 = 1/6."},
+      {ctx:"Récapitulatif division : trois étapes — garder, retourner, multiplier.",
+       q:`Calcule ${frac(7,12)} ÷ ${frac(7,3)} = ?`,
+       choices:[`${frac(49,36)}`,`${frac(1,3)}`,`${frac(1,4)}`,`${frac(7,4)}`],correct:2,
+       ok:`Bravo ! ${frac(7,12)}×${frac(3,7)}=${frac(21,84)}=${frac(1,4)}.`,
+       ko:`Inverser ${frac(7,3)} → ${frac(3,7)}. Puis ${frac(7,12)}×${frac(3,7)}=${frac(21,84)}=${frac(1,4)}.`,
+       reflex:"Les 7 se simplifient, les 3 et 12 donnent 1/4. Toujours simplifier en croix avant de multiplier."},
+    ]
+  },
+  /* 3 — Simplification */
+  {
+    label:"Simplification",
+    color:"green",
+    questions:[
+      {ctx:"Simplifier une fraction : diviser le numérateur ET le dénominateur par le même nombre (diviseur commun).",
+       q:`Quelle est la forme simplifiée de ${frac(6,9)} ?`,
+       choices:[`${frac(3,4)}`,`${frac(1,3)}`,`${frac(2,3)}`,`${frac(6,9)}`],correct:2,
+       ok:`Exact ! 6 et 9 sont tous les deux divisibles par 3. 6÷3=2 et 9÷3=3 → ${frac(2,3)}.`,
+       ko:`6 et 9 ont un diviseur commun : 3. 6÷3=2 et 9÷3=3 → ${frac(2,3)}.`,
+       reflex:"Trouver un diviseur commun : si les deux nombres sont divisibles par 2 ? Par 3 ? Par 5 ?"},
+      {ctx:"Simplifier une fraction : diviser le numérateur ET le dénominateur par le même nombre.",
+       q:`Quelle est la forme simplifiée de ${frac(4,12)} ?`,
+       choices:[`${frac(2,6)}`,`${frac(1,4)}`,`${frac(1,3)}`,`${frac(2,3)}`],correct:2,
+       ok:`Parfait ! 4 divise 12. 4÷4=1 et 12÷4=3 → ${frac(1,3)}.`,
+       ko:`4 et 12 ont un diviseur commun : 4. 4÷4=1 et 12÷4=3 → ${frac(1,3)}.`,
+       reflex:"Remarquer que 4 divise 12 directement (12 = 4 × 3) → diviser les deux par 4."},
+      {ctx:"Simplifier une fraction : chercher le plus grand diviseur commun.",
+       q:`Quelle est la forme simplifiée de ${frac(15,20)} ?`,
+       choices:[`${frac(5,10)}`,`${frac(3,4)}`,`${frac(1,4)}`,`${frac(4,5)}`],correct:1,
+       ok:`Super ! 15 et 20 sont tous les deux divisibles par 5. 15÷5=3 et 20÷5=4 → ${frac(3,4)}.`,
+       ko:`15 et 20 ont un diviseur commun : 5. 15÷5=3, 20÷5=4 → ${frac(3,4)}.`,
+       reflex:"Les deux se terminent par 0 ou 5 → divisibles par 5. Réflexe rapide !"},
+      {ctx:"Simplifier : vérifier que le résultat ne peut plus être simplifié.",
+       q:`Quelle est la forme la plus simplifiée de ${frac(8,12)} ?`,
+       choices:[`${frac(4,6)}`,`${frac(2,4)}`,`${frac(2,3)}`,`${frac(1,2)}`],correct:2,
+       ok:`Bravo ! On peut diviser par 2 (→ 4/6), puis encore par 2 (→ 2/3). Ou directement par 4 : 8÷4=2, 12÷4=3.`,
+       ko:`8 et 12 sont divisibles par 4. 8÷4=2 et 12÷4=3 → ${frac(2,3)}.`,
+       reflex:"Diviser par 2 donne 4/6, mais on peut encore diviser par 2 → 2/3. Chercher le PLUS GRAND diviseur commun."},
+      {ctx:"Simplifier : 2/3 ne peut plus être simplifié (2 et 3 n'ont pas de diviseur commun autre que 1).",
+       q:`Parmi ces fractions, laquelle est déjà sous sa forme simplifiée ?`,
+       choices:[`${frac(4,6)}`,`${frac(9,15)}`,`${frac(5,7)}`,`${frac(6,9)}`],correct:2,
+       ok:`Exact ! 5 et 7 sont premiers entre eux : leur seul diviseur commun est 1. La fraction est déjà simplifiée.`,
+       ko:`5 et 7 sont premiers entre eux (pas de diviseur commun sauf 1) → ${frac(5,7)} est déjà simplifiée.`,
+       reflex:"Une fraction est simplifiée quand numérateur et dénominateur n'ont aucun diviseur commun autre que 1."},
+      {ctx:"Simplifier une fraction issue d'un calcul : toujours vérifier après chaque opération.",
+       q:`Après un calcul on obtient ${frac(10,15)}. Forme simplifiée ?`,
+       choices:[`${frac(5,8)}`,`${frac(2,3)}`,`${frac(1,2)}`,`${frac(5,7)}`],correct:1,
+       ok:`Parfait ! 10 et 15 sont tous deux divisibles par 5 → ${frac(2,3)}.`,
+       ko:`10÷5=2 et 15÷5=3 → ${frac(2,3)}.`,
+       reflex:"Réflexe de fin de calcul : toujours vérifier si le résultat se simplifie."},
+      {ctx:"Simplifier une fraction : méthode des divisions successives par 2, 3, 5...",
+       q:`Quelle est la forme simplifiée de ${frac(6,8)} ?`,
+       choices:[`${frac(3,4)}`,`${frac(2,4)}`,`${frac(1,4)}`,`${frac(6,8)}`],correct:0,
+       ok:`Correct ! 6 et 8 sont tous deux pairs → diviser par 2. 6÷2=3 et 8÷2=4 → ${frac(3,4)}.`,
+       ko:`6 et 8 sont pairs → diviser par 2. 6÷2=3 et 8÷2=4 → ${frac(3,4)}.`,
+       reflex:"Réflexe : les deux sont-ils pairs ? Si oui, commencer par diviser par 2."},
+      {ctx:"Simplifier une fraction : diviser le numérateur ET le dénominateur par leur diviseur commun.",
+       q:`Quelle est la forme simplifiée de ${frac(9,15)} ?`,
+       choices:[`${frac(4,7)}`,`${frac(3,4)}`,`${frac(3,5)}`,`${frac(1,5)}`],correct:2,
+       ok:`Super ! 9 et 15 sont divisibles par 3. 9÷3=3 et 15÷3=5 → ${frac(3,5)}.`,
+       ko:`9 et 15 sont tous deux divisibles par 3. 9÷3=3, 15÷3=5 → ${frac(3,5)}.`,
+       reflex:"9 = 3×3 et 15 = 3×5. Ils partagent le facteur 3."},
+      {ctx:"Simplifier une fraction : toujours vérifier que la simplification est totale.",
+       q:`Quelle est la forme simplifiée de ${frac(12,18)} ?`,
+       choices:[`${frac(6,9)}`,`${frac(2,3)}`,`${frac(4,6)}`,`${frac(1,2)}`],correct:1,
+       ok:`Excellent ! 12 et 18 sont divisibles par 6. 12÷6=2 et 18÷6=3 → ${frac(2,3)}.`,
+       ko:`12÷6=2 et 18÷6=3 → ${frac(2,3)}. Attention : diviser seulement par 2 donne 6/9, qui se simplifie encore.`,
+       reflex:"Diviser par 2 donne 6/9 (divisible par 3 → 2/3). Mieux : diviser directement par 6."},
+      {ctx:"Récapitulatif : reconnaître la fraction la plus simplifiée.",
+       q:`Laquelle de ces fractions représente le même nombre que ${frac(12,18)} sous sa forme la plus simplifiée ?`,
+       choices:[`${frac(6,9)}`,`${frac(4,6)}`,`${frac(2,3)}`,`${frac(3,4)}`],correct:2,
+       ok:`Parfait ! ${frac(12,18)}=${frac(6,9)}=${frac(4,6)}=${frac(2,3)}. La plus simplifiée est ${frac(2,3)} car 2 et 3 n'ont pas de diviseur commun.`,
+       ko:`Toutes sauf ${frac(3,4)} sont égales à ${frac(12,18)}, mais la plus simplifiée est ${frac(2,3)} (2 et 3 n'ont pas de diviseur commun autre que 1).`,
+       reflex:"La forme la plus simplifiée est celle où numérateur et dénominateur n'ont aucun diviseur commun autre que 1."},
+    ]
+  }
+];
+
+let opIdx=0, current=0, score=0, results=[], answered=false;
+
+function switchOp(idx, btn){
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  opIdx=idx; current=0; score=0; results=[]; answered=false;
+  document.getElementById('score-screen').className='score-screen';
+  document.getElementById('quiz-card').style.display='block';
+  document.getElementById('prog-wrap').style.display='block';
+  loadQ();
+}
+
+function loadQ(){
+  answered=false;
+  const op=OPS[opIdx], q=op.questions[current];
+  document.getElementById('q-ctx').innerHTML=q.ctx;
+  document.getElementById('q-num').textContent=`Question ${current+1} sur ${op.questions.length}`;
+  document.getElementById('q-text').innerHTML=q.q;
+  document.getElementById('feedback').className='feedback';
+  document.getElementById('next-btn').className='next-btn';
+  const cc=document.getElementById('choices');
+  cc.innerHTML='';
+  q.choices.forEach((c,i)=>{
+    const b=document.createElement('button');
+    b.className='choice';
+    b.innerHTML=c;
+    b.onclick=()=>answer(i);
+    cc.appendChild(b);
+  });
+  updateProg();
+  const card=document.getElementById('quiz-card');
+  card.style.animation='none'; card.offsetHeight; card.style.animation='slideIn .3s ease';
+}
+
+function answer(idx){
+  if(answered)return; answered=true;
+  const q=OPS[opIdx].questions[current];
+  const btns=document.querySelectorAll('.choice');
+  btns.forEach(b=>b.disabled=true);
+  const ok=idx===q.correct;
+  results.push(ok); if(ok) score++;
+  btns[q.correct].className='choice correct';
+  if(!ok) btns[idx].className='choice wrong';
+  const fb=document.getElementById('feedback');
+  const badge=document.getElementById('fb-badge');
+  badge.textContent=ok?'✓':'✗'; badge.className='fb-badge '+(ok?'ok':'ko');
+  document.getElementById('fb-head').textContent=ok?'Bonne réponse !':'Pas tout à fait.';
+  document.getElementById('fb-body').innerHTML=ok?q.ok:q.ko;
+  const ref=document.getElementById('fb-reflex');
+  if(q.reflex){ref.innerHTML='💡 '+q.reflex;ref.style.display='block';}else{ref.style.display='none';}
+  fb.className='feedback show '+(ok?'ok':'ko');
+  const nb=document.getElementById('next-btn');
+  nb.textContent=current<OPS[opIdx].questions.length-1?'Question suivante →':'Voir mon score';
+  nb.className='next-btn show';
+  updateProg();
+}
+
+function nextQ(){
+  current++;
+  if(current>=OPS[opIdx].questions.length){showScore();return;}
+  loadQ();
+}
+
+function updateProg(){
+  const total=OPS[opIdx].questions.length;
+  document.getElementById('prog-label').textContent=`Question ${Math.min(current+1,total)} / ${total}`;
+  document.getElementById('prog-score').textContent=`${score} bonne(s)`;
+  document.getElementById('prog-fill').style.width=(results.length/total*100)+'%';
+}
+
+function showScore(){
+  document.getElementById('quiz-card').style.display='none';
+  document.getElementById('prog-wrap').style.display='none';
+  const msgs=["À retravailler. Relis la règle et recommence.","Des lacunes. Recommence en lisant les feedbacks.","En bonne voie ! Encore quelques automatismes à ancrer.","Très bien ! Les réflexes sont presque là.","Parfait ! Tu maîtrises cette opération."];
+  const mi=score<=2?0:score<=4?1:score<=6?2:score<=8?3:4;
+  document.getElementById('score-frac').innerHTML=`<span>${score}</span><span class="denom"> / ${OPS[opIdx].questions.length}</span>`;
+  document.getElementById('score-msg').textContent=msgs[mi];
+  const nextOp=document.getElementById('btn-next-op');
+  if(opIdx<OPS.length-1){nextOp.textContent=`Passer à : ${OPS[opIdx+1].label} →`;nextOp.style.display='inline-block';}
+  else{nextOp.style.display='none';}
+  const recap=document.getElementById('recap');
+  recap.innerHTML='';
+  OPS[opIdx].questions.forEach((q,i)=>{
+    const d=document.createElement('div');d.className='recap-item';
+    d.innerHTML=`<div class="rdot ${results[i]?'ok':'ko'}"></div><div class="rq"><strong>Q${i+1}</strong>${q.q.replace(/<[^>]+>/g,'').substring(0,40)}…</div>`;
+    recap.appendChild(d);
+  });
+  document.getElementById('score-screen').className='score-screen show';
+}
+
+function restart(){
+  current=0;score=0;results=[];answered=false;
+  document.getElementById('quiz-card').style.display='block';
+  document.getElementById('prog-wrap').style.display='block';
+  document.getElementById('score-screen').className='score-screen';
+  loadQ();
+}
+
+function goNextOp(){
+  if(opIdx>=OPS.length-1)return;
+  opIdx++;
+  document.querySelectorAll('.tab-btn')[opIdx].classList.add('active');
+  document.querySelectorAll('.tab-btn')[opIdx-1].classList.remove('active');
+  current=0;score=0;results=[];answered=false;
+  document.getElementById('quiz-card').style.display='block';
+  document.getElementById('prog-wrap').style.display='block';
+  document.getElementById('score-screen').className='score-screen';
+  loadQ();
+}
+
+loadQ();
+</script>
+</body>
+</html>

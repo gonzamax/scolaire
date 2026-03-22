@@ -3,326 +3,250 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Index — Outils pédagogiques</title>
-<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=Source+Code+Pro:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<title>Mes outils de révision</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Lora:ital,wght@0,500;0,700;1,500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-:root {
-  --bg: #0c0c0e;
-  --surface: #141416;
-  --surface2: #1c1c1f;
-  --border: rgba(255,255,255,0.07);
-  --border2: rgba(255,255,255,0.13);
-  --text: #f0efe8;
-  --muted: #7a7a7a;
-  --radius: 10px;
-  --radius-lg: 16px;
+:root{
+  --bg:#f5f4f0;--paper:#fff;--ink:#1a1a18;--ink2:#4a4a44;--ink3:#9a9a90;--rule:#e4e2da;
+  --T:#1a3a5c;--T-bg:#eef4fb;--T-mid:#7fb3d8;--T-light:#dceef8;
+  --Q:#2a5c30;--Q-bg:#eef7f0;--Q-mid:#7fc490;--Q-light:#d4edda;
+  --A:#7a3a00;--A-bg:#fdf4eb;--A-mid:#e0a060;--A-light:#f9e2c4;
+  --radius:10px;--radius-lg:18px;--radius-xl:24px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--ink);font-family:'Nunito',sans-serif;min-height:100vh;padding:0 1rem 5rem;}
 
-  --c-maths: #c8f060;
-  --c-maths-dim: rgba(200,240,96,0.08);
-  --c-maths-border: rgba(200,240,96,0.25);
+/* HERO */
+.hero{max-width:860px;margin:0 auto;padding:3rem 0 2.5rem;text-align:center;}
+.hero-eyebrow{font-size:13px;font-weight:600;color:var(--ink3);letter-spacing:.06em;margin-bottom:.75rem;}
+.hero h1{font-family:'Lora',serif;font-size:clamp(2rem,5vw,3.2rem);font-weight:700;line-height:1.1;color:var(--ink);margin-bottom:.75rem;}
+.hero h1 em{font-style:italic;color:var(--T);}
+.hero-sub{font-size:15px;color:var(--ink3);max-width:480px;margin:0 auto;line-height:1.65;}
 
-  --c-english: #fb923c;
-  --c-english-dim: rgba(251,146,60,0.08);
-  --c-english-border: rgba(251,146,60,0.25);
+/* LEVEL CHOICE BUTTONS */
+.level-choice{max-width:860px;margin:2.5rem auto 0;display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+@media(max-width:560px){.level-choice{grid-template-columns:1fr;}}
+.level-btn{display:flex;align-items:center;gap:1rem;padding:1.25rem 1.5rem;border:2.5px solid transparent;border-radius:var(--radius-xl);cursor:pointer;text-align:left;transition:transform .12s,box-shadow .12s,border-color .12s;text-decoration:none;color:inherit;}
+.level-btn:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,.08);}
+.level-btn:active{transform:translateY(0);}
+.level-btn.terminale{background:var(--T-bg);border-color:var(--T-light);}
+.level-btn.terminale:hover{border-color:var(--T-mid);}
+.level-btn.quatre{background:var(--Q-bg);border-color:var(--Q-light);}
+.level-btn.quatre:hover{border-color:var(--Q-mid);}
+.level-icon{width:52px;height:52px;border-radius:var(--radius-lg);display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;}
+.terminale .level-icon{background:var(--T);}
+.quatre .level-icon{background:var(--Q);}
+.level-class{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:3px;}
+.terminale .level-class{color:var(--T);}
+.quatre .level-class{color:var(--Q);}
+.level-name{font-family:'Lora',serif;font-size:1.2rem;font-weight:700;color:var(--ink);line-height:1.2;margin-bottom:3px;}
+.level-count{font-size:12.5px;color:var(--ink3);}
+.level-arrow{font-size:18px;color:var(--ink3);margin-left:auto;transition:transform .15s;}
+.level-btn:hover .level-arrow{transform:translateX(4px);}
 
-  --c-exercises: #a78bfa;
-  --c-exercises-dim: rgba(167,139,250,0.08);
-  --c-exercises-border: rgba(167,139,250,0.25);
-}
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-body {
-  background: var(--bg);
-  color: var(--text);
-  font-family: 'Outfit', sans-serif;
-  min-height: 100vh;
-  padding: 0 1rem 5rem;
-}
+/* DIVIDER */
+.divider{max-width:860px;margin:3rem auto 0;display:flex;align-items:center;gap:14px;}
+.divider-line{flex:1;height:1px;background:var(--rule);}
+.divider-label{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--ink3);white-space:nowrap;}
 
-/* ── HEADER ── */
-.page-header {
-  max-width: 860px;
-  margin: 0 auto;
-  padding: 3.5rem 0 2.5rem;
-  border-bottom: 0.5px solid var(--border2);
-  margin-bottom: 3rem;
-}
-.page-tag {
-  font-family: 'Source Code Pro', monospace;
-  font-size: 11px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--muted);
-  margin-bottom: 0.6rem;
-}
-.page-title {
-  font-family: 'Lora', serif;
-  font-size: clamp(1.8rem, 4vw, 2.8rem);
-  font-weight: 600;
-  line-height: 1.2;
-  margin-bottom: 0.6rem;
-}
-.page-title em { font-style: italic; color: var(--c-maths); }
-.page-sub { font-size: 14px; color: var(--muted); line-height: 1.6; }
+/* SECTION */
+.level-section{max-width:860px;margin:2rem auto 0;background:var(--paper);border:1.5px solid var(--rule);border-radius:var(--radius-xl);overflow:hidden;scroll-margin-top:1.5rem;}
+.level-section-header{display:flex;align-items:center;gap:14px;padding:1.5rem 1.75rem 1.25rem;border-bottom:1.5px solid var(--rule);}
+.lsh-icon{width:44px;height:44px;border-radius:var(--radius-lg);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
+.terminale-section .lsh-icon{background:var(--T);}
+.quatre-section .lsh-icon{background:var(--Q);}
+.anglais-section .lsh-icon{background:var(--A);}
+.lsh-eyebrow{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:2px;}
+.terminale-section .lsh-eyebrow{color:var(--T);}
+.quatre-section .lsh-eyebrow{color:var(--Q);}
+.anglais-section .lsh-eyebrow{color:var(--A);}
+.lsh-title{font-family:'Lora',serif;font-size:1.15rem;font-weight:700;color:var(--ink);line-height:1.3;}
+.lsh-badge{margin-left:auto;font-size:12px;font-weight:700;padding:4px 12px;border-radius:20px;flex-shrink:0;}
+.terminale-section .lsh-badge{background:var(--T-bg);color:var(--T);}
+.quatre-section .lsh-badge{background:var(--Q-bg);color:var(--Q);}
+.anglais-section .lsh-badge{background:var(--A-bg);color:var(--A);}
 
-/* ── SECTION LABEL ── */
-.section-label {
-  max-width: 860px;
-  margin: 0 auto 1rem;
-  font-family: 'Source Code Pro', monospace;
-  font-size: 11px;
-  font-weight: 500;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-.section-label::after {
-  content: '';
-  flex: 1;
-  height: 0.5px;
-  background: var(--border2);
-}
+/* RESOURCE LIST */
+.resource-item{display:flex;align-items:center;gap:14px;padding:1rem 1.75rem;border-bottom:1px solid var(--rule);text-decoration:none;color:inherit;transition:background .12s;}
+.resource-item:last-child{border-bottom:none;}
+.resource-item:hover{background:var(--bg);}
+.ri-type{width:38px;height:38px;border-radius:var(--radius);display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;}
+.ri-type.quiz{background:#e8f0ff;}
+.ri-type.exo{background:#fff0e8;}
+.ri-type.app{background:#f0ffe8;}
+.ri-body{flex:1;min-width:0;}
+.ri-name{font-size:14.5px;font-weight:700;color:var(--ink);line-height:1.3;margin-bottom:3px;}
+.ri-desc{font-size:12.5px;color:var(--ink3);line-height:1.4;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.ri-meta{display:flex;flex-direction:column;align-items:flex-end;gap:5px;flex-shrink:0;}
+.ri-tag{font-family:'JetBrains Mono',monospace;font-size:10px;padding:2px 8px;border-radius:20px;white-space:nowrap;font-weight:500;}
+.ri-tag.quiz{background:#e8f0ff;color:#2a4abd;}
+.ri-tag.exo{background:#fff0e8;color:#8a4a10;}
+.ri-tag.app{background:#f0ffe8;color:#2a6a20;}
+.ri-arrow{color:var(--ink3);font-size:16px;transition:transform .12s,color .12s;}
+.resource-item:hover .ri-arrow{transform:translateX(3px);color:var(--ink);}
 
-/* ── GRID ── */
-.grid {
-  max-width: 860px;
-  margin: 0 auto 3rem;
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 12px;
-}
+/* FOOTER */
+.page-footer{max-width:860px;margin:3rem auto 0;padding-top:1.5rem;border-top:1px solid var(--rule);font-size:12px;color:var(--ink3);font-family:'JetBrains Mono',monospace;letter-spacing:.04em;text-align:center;line-height:1.8;}
 
-/* ── CARD ── */
-.card {
-  background: var(--surface);
-  border: 0.5px solid var(--border2);
-  border-radius: var(--radius-lg);
-  padding: 1.25rem 1.5rem 1.25rem;
-  text-decoration: none;
-  color: var(--text);
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  transition: background 0.15s, border-color 0.15s, transform 0.1s;
-  cursor: pointer;
-}
-.card:hover { background: var(--surface2); transform: translateY(-2px); }
-.card:active { transform: translateY(0); }
-
-.card.maths { border-left: 3px solid var(--c-maths); }
-.card.english { border-left: 3px solid var(--c-english); }
-.card.exercises { border-left: 3px solid var(--c-exercises); }
-
-.card-tag {
-  font-family: 'Source Code Pro', monospace;
-  font-size: 10px;
-  font-weight: 500;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-}
-.card.maths .card-tag { color: var(--c-maths); }
-.card.english .card-tag { color: var(--c-english); }
-.card.exercises .card-tag { color: var(--c-exercises); }
-
-.card-title {
-  font-family: 'Lora', serif;
-  font-size: 1rem;
-  font-weight: 600;
-  line-height: 1.35;
-  color: var(--text);
-}
-.card-desc {
-  font-size: 12.5px;
-  color: var(--muted);
-  line-height: 1.55;
-  flex: 1;
-}
-.card-footer {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding-top: 10px;
-  border-top: 0.5px solid var(--border);
-  margin-top: 2px;
-}
-.card-pills {
-  display: flex;
-  gap: 5px;
-  flex-wrap: wrap;
-}
-.pill {
-  font-family: 'Source Code Pro', monospace;
-  font-size: 10px;
-  padding: 2px 7px;
-  border-radius: 20px;
-  border: 0.5px solid var(--border2);
-  color: var(--muted);
-  background: var(--surface2);
-}
-.card-arrow {
-  font-size: 14px;
-  color: var(--muted);
-  transition: transform 0.15s, color 0.15s;
-}
-.card:hover .card-arrow { transform: translateX(3px); color: var(--text); }
-
-/* ── STATS BAR ── */
-.stats-bar {
-  max-width: 860px;
-  margin: 0 auto 3rem;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-  gap: 10px;
-}
-.stat-item {
-  background: var(--surface);
-  border: 0.5px solid var(--border);
-  border-radius: var(--radius);
-  padding: 1rem;
-  text-align: center;
-}
-.stat-num {
-  font-family: 'Lora', serif;
-  font-size: 1.8rem;
-  font-weight: 600;
-  color: var(--text);
-  line-height: 1;
-  margin-bottom: 4px;
-}
-.stat-label {
-  font-size: 11px;
-  color: var(--muted);
-  font-family: 'Source Code Pro', monospace;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-}
-
-/* ── FOOTER ── */
-.page-footer {
-  max-width: 860px;
-  margin: 0 auto;
-  padding-top: 2rem;
-  border-top: 0.5px solid var(--border);
-  font-size: 12px;
-  color: var(--muted);
-  font-family: 'Source Code Pro', monospace;
-  letter-spacing: 0.05em;
+@media(max-width:600px){
+  .level-section-header{padding:1.1rem 1.25rem 1rem;}
+  .resource-item{padding:.9rem 1.25rem;}
+  .lsh-badge{display:none;}
+  .ri-desc{display:none;}
 }
 </style>
 </head>
 <body>
 
-<div class="page-header">
-  <div class="page-tag">Terminale Spé Maths · 4ème Anglais · Bac 2026</div>
-  <div class="page-title">Outils pédagogiques —<br><em>Tous les fichiers</em></div>
-  <p class="page-sub">Quiz interactifs, exercices type bac et applications d'entraînement. Ouvrir directement dans un navigateur, aucune installation requise.</p>
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-eyebrow">Outils de révision · Maths &amp; Anglais</div>
+  <h1>Par où<br><em>commencer ?</em></h1>
+  <p class="hero-sub">Choisis ta classe pour accéder directement à tes ressources.</p>
+
+  <div class="level-choice">
+    <a class="level-btn terminale" href="#terminale">
+      <div class="level-icon">🎓</div>
+      <div class="level-text">
+        <div class="level-class">Terminale</div>
+        <div class="level-name">Spécialité Maths</div>
+        <div class="level-count">4 ressources · Bac 2026</div>
+      </div>
+      <div class="level-arrow">↓</div>
+    </a>
+    <a class="level-btn quatre" href="#quatrieme">
+      <div class="level-icon">📐</div>
+      <div class="level-text">
+        <div class="level-class">4ème</div>
+        <div class="level-name">Maths &amp; Anglais</div>
+        <div class="level-count">3 ressources</div>
+      </div>
+      <div class="level-arrow">↓</div>
+    </a>
+  </div>
 </div>
 
-<div class="stats-bar">
-  <div class="stat-item"><div class="stat-num" style="color:var(--c-maths)">3</div><div class="stat-label">Quiz maths</div></div>
-  <div class="stat-item"><div class="stat-num" style="color:var(--c-exercises)">1</div><div class="stat-label">Exercices bac</div></div>
-  <div class="stat-item"><div class="stat-num" style="color:var(--c-english)">1</div><div class="stat-label">App anglais</div></div>
-  <div class="stat-item"><div class="stat-num">30</div><div class="stat-label">Questions maths</div></div>
-  <div class="stat-item"><div class="stat-num">70+</div><div class="stat-label">Questions english</div></div>
+<!-- TERMINALE -->
+<div class="divider">
+  <div class="divider-line"></div>
+  <div class="divider-label">Terminale · Spé Maths · Bac 2026</div>
+  <div class="divider-line"></div>
 </div>
 
-<!-- SECTION 1 : QUIZ MATHS -->
-<div class="section-label" style="color:var(--c-maths)">Quiz Spé Maths — Terminale</div>
-<div class="grid">
-
-  <a class="card maths" href="quiz-denombrement-bac.html">
-    <div class="card-tag">Maths · Quiz interactif</div>
-    <div class="card-title">Dénombrement — Combinaison ou arrangement ?</div>
-    <div class="card-desc">10 questions progressives pour automatiser le réflexe de choix entre C(n,k), A(n,k), règle du produit et complémentaire. Feedback immédiat avec explication.</div>
-    <div class="card-footer">
-      <div class="card-pills">
-        <span class="pill">10 questions</span>
-        <span class="pill">Programme BO</span>
-        <span class="pill">Bac 2026</span>
-      </div>
-      <span class="card-arrow">→</span>
+<div class="level-section terminale-section" id="terminale">
+  <div class="level-section-header">
+    <div class="lsh-icon">🎓</div>
+    <div class="lsh-text">
+      <div class="lsh-eyebrow">Terminale · Spécialité Mathématiques</div>
+      <div class="lsh-title">Quiz interactifs + exercices type bac</div>
     </div>
+    <div class="lsh-badge">Bac 2026</div>
+  </div>
+
+  <a class="resource-item" href="quiz-denombrement-bac.html">
+    <div class="ri-type quiz">🎯</div>
+    <div class="ri-body">
+      <div class="ri-name">Quiz · Dénombrement</div>
+      <div class="ri-desc">Combinaison ou arrangement ? — C(n,k), A(n,k), règle du produit, complémentaire — feedback immédiat sur chaque erreur</div>
+    </div>
+    <div class="ri-meta"><span class="ri-tag quiz">Quiz · 10 questions</span></div>
+    <div class="ri-arrow">→</div>
   </a>
 
-  <a class="card maths" href="quiz-fonctions-bac.html">
-    <div class="card-tag">Maths · Quiz interactif</div>
-    <div class="card-title">Fonctions — Identifier le bon outil</div>
-    <div class="card-desc">10 questions sur les limites, dérivées (produit, composée), variations, convexité, TVI et croissances comparées. Chaque question pointe le déclencheur à repérer dans l'énoncé.</div>
-    <div class="card-footer">
-      <div class="card-pills">
-        <span class="pill">10 questions</span>
-        <span class="pill">ln · exp · TVI</span>
-        <span class="pill">Bac 2026</span>
-      </div>
-      <span class="card-arrow">→</span>
+  <a class="resource-item" href="quiz-fonctions-bac.html">
+    <div class="ri-type quiz">🎯</div>
+    <div class="ri-body">
+      <div class="ri-name">Quiz · Fonctions</div>
+      <div class="ri-desc">Limites, dérivées (produit, composée), variations, convexité, TVI, croissances comparées — identifier le bon outil dans l'énoncé</div>
     </div>
+    <div class="ri-meta"><span class="ri-tag quiz">Quiz · 10 questions</span></div>
+    <div class="ri-arrow">→</div>
   </a>
 
-  <a class="card maths" href="quiz-eq-diff-bac.html">
-    <div class="card-tag">Maths · Quiz interactif</div>
-    <div class="card-title">Équations différentielles — y' = ay et y' = ay + b</div>
-    <div class="card-desc">10 questions couvrant les deux seuls types au programme : solution générale, condition initiale, solution particulière constante et vérification. Avec contextes de modélisation.</div>
-    <div class="card-footer">
-      <div class="card-pills">
-        <span class="pill">10 questions</span>
-        <span class="pill">Modélisation</span>
-        <span class="pill">Bac 2026</span>
-      </div>
-      <span class="card-arrow">→</span>
+  <a class="resource-item" href="quiz-eq-diff-bac.html">
+    <div class="ri-type quiz">🎯</div>
+    <div class="ri-body">
+      <div class="ri-name">Quiz · Équations différentielles</div>
+      <div class="ri-desc">y' = ay et y' = ay + b — solution générale, condition initiale, vérification — les deux seuls types au programme</div>
     </div>
+    <div class="ri-meta"><span class="ri-tag quiz">Quiz · 10 questions</span></div>
+    <div class="ri-arrow">→</div>
   </a>
 
+  <a class="resource-item" href="exercices-type-bac-2026.html">
+    <div class="ri-type exo">📝</div>
+    <div class="ri-body">
+      <div class="ri-name">Exercices type bac · Dénombrement · Fonctions · Éq. diff.</div>
+      <div class="ri-desc">3 exercices format bac réel (parties A/B/C), corrigés dépliables — vérifié sur sujet Métropole juin 2025</div>
+    </div>
+    <div class="ri-meta"><span class="ri-tag exo">Corrigés inclus · 22 pts</span></div>
+    <div class="ri-arrow">→</div>
+  </a>
 </div>
 
-<!-- SECTION 2 : EXERCICES TYPE BAC -->
-<div class="section-label" style="color:var(--c-exercises)">Exercices type bac — Format officiel</div>
-<div class="grid">
-
-  <a class="card exercises" href="exercices-type-bac-2026.html" style="grid-column: 1 / -1; max-width: 100%;">
-    <div class="card-tag">Maths · 3 exercices · Corrigés inclus</div>
-    <div class="card-title">Trois exercices type bac 2026 — Dénombrement · Fonctions · Équations différentielles</div>
-    <div class="card-desc">Format reproduisant exactement la structure des sujets bac réels (parties A/B/C progressives, questions numérotées, données numériques vérifiées). Corrigés détaillés dépliables. Vérifié sur le sujet Métropole juin 2025 et le BO officiel — primitive, intégrale et calculs tous contrôlés.</div>
-    <div class="card-footer">
-      <div class="card-pills">
-        <span class="pill">Exercice 1 · 7 pts — Dénombrement + proba</span>
-        <span class="pill">Exercice 2 · 8 pts — Étude complète f(x)=(2x−1)e⁻ˣ</span>
-        <span class="pill">Exercice 3 · 7 pts — Modélisation bactérienne</span>
-        <span class="pill">Format bac vérifié</span>
-      </div>
-      <span class="card-arrow">→</span>
-    </div>
-  </a>
-
+<!-- 4ème MATHS -->
+<div class="divider" style="margin-top:2.5rem;">
+  <div class="divider-line"></div>
+  <div class="divider-label">4ème · Maths &amp; Anglais</div>
+  <div class="divider-line"></div>
 </div>
 
-<!-- SECTION 3 : ANGLAIS -->
-<div class="section-label" style="color:var(--c-english)">Anglais — 4ème</div>
-<div class="grid">
-
-  <a class="card english" href="quiz-past-tenses-4eme-english.html" style="grid-column: 1 / -1; max-width: 100%;">
-    <div class="card-tag">English · Application interactive · 4ème</div>
-    <div class="card-title">Past Tenses Mission — Simple Past vs Past Continuous</div>
-    <div class="card-desc">Application complète en 7 onglets : mémo grammatical illustré, quiz rapide à choix multiples (16 questions), compléter les blancs (10 phrases), mini-histoire à reconstituer (banque de mots), détective des erreurs, vrai/faux et remise en ordre. Score en temps réel avec confettis. Optimisée mobile et tablette.</div>
-    <div class="card-footer">
-      <div class="card-pills">
-        <span class="pill">7 activités</span>
-        <span class="pill">16 phrases quiz</span>
-        <span class="pill">Score temps réel</span>
-        <span class="pill">Mobile-friendly</span>
-        <span class="pill">4ème · Programme EN</span>
-      </div>
-      <span class="card-arrow">→</span>
+<div class="level-section quatre-section" id="quatrieme">
+  <div class="level-section-header">
+    <div class="lsh-icon">📐</div>
+    <div class="lsh-text">
+      <div class="lsh-eyebrow">4ème · Mathématiques — Cycle 4 officiel</div>
+      <div class="lsh-title">Fractions : quiz + exercices type contrôle</div>
     </div>
+    <div class="lsh-badge">Cycle 4</div>
+  </div>
+
+  <a class="resource-item" href="quiz-fractions-4e.html">
+    <div class="ri-type quiz">🎯</div>
+    <div class="ri-body">
+      <div class="ri-name">Quiz · Fractions — Quelle opération, quelle règle ?</div>
+      <div class="ri-desc">4 onglets : addition/soustraction · multiplication · division · simplification — 10 questions chacun, feedback sur chaque erreur</div>
+    </div>
+    <div class="ri-meta"><span class="ri-tag quiz">Quiz · 40 questions</span></div>
+    <div class="ri-arrow">→</div>
   </a>
 
+  <a class="resource-item" href="exercices-fractions-4e.html">
+    <div class="ri-type exo">📝</div>
+    <div class="ri-body">
+      <div class="ri-name">Exercices type contrôle · Fractions</div>
+      <div class="ri-desc">4 exercices progressifs avec problèmes concrets — dénominateur commun, simplification en croix, division, mélange d'opérations</div>
+    </div>
+    <div class="ri-meta"><span class="ri-tag exo">Corrigés inclus · 23 questions</span></div>
+    <div class="ri-arrow">→</div>
+  </a>
+</div>
+
+<!-- 4ème ANGLAIS -->
+<div class="level-section anglais-section" style="margin-top:1rem;">
+  <div class="level-section-header">
+    <div class="lsh-icon">🇬🇧</div>
+    <div class="lsh-text">
+      <div class="lsh-eyebrow">4ème · Anglais — Simple Past vs Past Continuous</div>
+      <div class="lsh-title">Application interactive complète</div>
+    </div>
+    <div class="lsh-badge">7 activités</div>
+  </div>
+
+  <a class="resource-item" href="quiz-past-tenses-4eme-english.html">
+    <div class="ri-type app">🕵️</div>
+    <div class="ri-body">
+      <div class="ri-name">Past Tenses Mission · Simple Past &amp; Past Continuous</div>
+      <div class="ri-desc">Mémo · Quiz · Compléter les blancs · Mini-histoire · Détective des erreurs · Vrai/Faux · Remets en ordre — score en temps réel</div>
+    </div>
+    <div class="ri-meta"><span class="ri-tag app">App · 70+ questions</span></div>
+    <div class="ri-arrow">→</div>
+  </a>
 </div>
 
 <div class="page-footer">
-  Tous les fichiers s'ouvrent en local — aucune connexion internet requise (sauf chargement des polices Google Fonts) · Calculatrice autorisée pour les exercices maths
+  Tous les fichiers fonctionnent sans connexion internet (sauf chargement des polices)<br>
+  Calculatrice non autorisée pour les fractions · Autorisée pour les exercices bac maths
 </div>
 
 </body>

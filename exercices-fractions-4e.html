@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fractions — Exercices type contrôle · 4e</title>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;500&family=Nunito:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#fdfcf8;--paper:#fff;--ink:#1c1a14;--ink2:#4a4538;--ink3:#8a8470;
+  --rule:#e8e4d8;--rule2:#d4cec0;
+  --teal:#00a896;--teal-light:#e8f7f6;--teal-mid:#7dd5cc;
+  --coral:#e05c4a;--coral-light:#fdf0ee;--coral-mid:#f0a090;
+  --amber:#e09a20;--amber-light:#fdf6e8;--amber-mid:#f0cc78;
+  --green:#2a9d68;--green-light:#eaf6f0;--green-mid:#88d4b0;
+  --purple:#6c47c8;--purple-light:#f0ecfb;
+  --corr-bg:#fffef0;--corr-border:#d4c850;
+  --radius:8px;--radius-lg:14px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--ink);font-family:'Nunito',sans-serif;padding:0 1rem 5rem;}
+
+.page-header{max-width:820px;margin:0 auto;padding:3rem 0 2rem;border-bottom:2px solid var(--ink);margin-bottom:2.5rem;}
+.page-tag{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink3);margin-bottom:.6rem;}
+.page-title{font-family:'Lora',serif;font-size:clamp(1.6rem,4vw,2.4rem);font-weight:600;line-height:1.2;margin-bottom:.5rem;}
+.page-title em{font-style:italic;color:var(--teal);}
+.page-sub{font-size:14px;color:var(--ink3);line-height:1.6;}
+.meta-chips{display:flex;gap:1rem;margin-top:.8rem;flex-wrap:wrap;}
+.chip{font-family:'JetBrains Mono',monospace;font-size:11px;background:var(--ink);color:var(--bg);padding:3px 10px;border-radius:3px;letter-spacing:.05em;}
+
+.exercise{max-width:820px;margin:0 auto 3rem;background:var(--paper);border:1px solid var(--rule2);border-radius:var(--radius-lg);overflow:hidden;box-shadow:0 1px 8px rgba(0,0,0,.04);}
+.ex-header{padding:1.25rem 1.5rem 1rem;border-bottom:1px solid var(--rule);display:flex;align-items:flex-start;gap:12px;}
+.ex-num{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Lora',serif;font-size:1rem;font-weight:600;flex-shrink:0;margin-top:2px;}
+.ex1 .ex-num{background:var(--teal);color:#fff;}
+.ex2 .ex-num{background:var(--coral);color:#fff;}
+.ex3 .ex-num{background:var(--amber);color:#fff;}
+.ex4 .ex-num{background:var(--green);color:#fff;}
+.ex-title{font-family:'Lora',serif;font-size:1.1rem;font-weight:600;line-height:1.3;color:var(--ink);}
+.ex-theme{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:3px;}
+.ex1 .ex-theme{color:var(--teal);}
+.ex2 .ex-theme{color:var(--coral);}
+.ex3 .ex-theme{color:var(--amber);}
+.ex4 .ex-theme{color:var(--green);}
+.ex-pts{margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink3);white-space:nowrap;padding-top:4px;}
+.ex-body{padding:1.5rem;}
+
+.intro-box{font-size:14px;color:var(--ink2);line-height:1.7;padding:12px 14px;border-radius:var(--radius);margin-bottom:1.25rem;border-left:3px solid;}
+.ex1 .intro-box{background:var(--teal-light);border-color:var(--teal);}
+.ex2 .intro-box{background:var(--coral-light);border-color:var(--coral);}
+.ex3 .intro-box{background:var(--amber-light);border-color:var(--amber);}
+.ex4 .intro-box{background:var(--green-light);border-color:var(--green);}
+
+.part-title{font-family:'Nunito',sans-serif;font-weight:700;font-size:12px;letter-spacing:.05em;text-transform:uppercase;padding:5px 0;border-bottom:1px solid var(--rule);margin-bottom:.9rem;}
+.ex1 .part-title{color:var(--teal);}
+.ex2 .part-title{color:var(--coral);}
+.ex3 .part-title{color:var(--amber);}
+.ex4 .part-title{color:var(--green);}
+
+.questions{list-style:none;}
+.q-item{display:flex;gap:10px;padding:8px 0;border-top:1px solid var(--rule);align-items:flex-start;font-size:14.5px;line-height:1.65;color:var(--ink2);}
+.q-item:first-child{border-top:none;}
+.q-n{font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:500;min-width:24px;padding-top:2px;flex-shrink:0;}
+.ex1 .q-n{color:var(--teal);}
+.ex2 .q-n{color:var(--coral);}
+.ex3 .q-n{color:var(--amber);}
+.ex4 .q-n{color:var(--green);}
+
+/* inline fraction */
+.fr{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;margin:0 2px;line-height:1.1;font-family:'Lora',serif;font-style:italic;}
+.fr .n,.fr .d{display:block;text-align:center;font-weight:600;font-size:.9em;}
+.fr .b{width:100%;height:1.5px;background:currentColor;margin:1.5px 0;}
+
+.part{margin-bottom:1.5rem;}
+
+/* correction */
+.corr-toggle{display:flex;align-items:center;gap:8px;width:100%;background:transparent;border:1px solid var(--rule2);border-radius:var(--radius);padding:9px 14px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:600;color:var(--ink3);cursor:pointer;margin-top:1.25rem;transition:background .15s;text-align:left;}
+.corr-toggle:hover{background:var(--bg);}
+.corr-arrow{font-size:11px;transition:transform .2s;margin-left:auto;}
+.corr-arrow.open{transform:rotate(90deg);}
+.correction{display:none;background:var(--corr-bg);border:1px solid var(--corr-border);border-radius:var(--radius);padding:1.25rem;margin-top:.6rem;animation:fadeIn .2s ease;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(4px);}to{opacity:1;transform:translateY(0);}}
+.correction.visible{display:block;}
+.corr-header{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#a89c40;margin-bottom:.8rem;padding-bottom:.4rem;border-bottom:1px solid var(--corr-border);}
+.corr-step{display:flex;gap:8px;padding:7px 0;border-top:1px solid rgba(0,0,0,.05);font-size:13px;line-height:1.7;color:var(--ink2);align-items:flex-start;}
+.corr-step:first-child{border-top:none;}
+.cs-n{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:500;color:#a89c40;min-width:24px;padding-top:2px;flex-shrink:0;}
+.cs-body{flex:1;}
+.cs-body strong{font-weight:700;color:var(--ink);}
+.result-line{font-family:'Lora',serif;font-style:italic;background:rgba(0,0,0,.025);border-radius:4px;padding:5px 10px;margin:5px 0;font-size:14px;color:var(--ink);border-left:2px solid var(--corr-border);}
+.warn-box{background:#fff8e0;border-left:2px solid #d4a017;border-radius:0 4px 4px 0;padding:7px 12px;font-size:12.5px;color:#7a5c00;margin-top:5px;line-height:1.55;}
+.ok-tag{display:inline-block;background:var(--green-light);color:var(--green);font-family:'JetBrains Mono',monospace;font-size:11px;padding:2px 7px;border-radius:3px;margin-top:4px;}
+
+@media(max-width:600px){.ex-body{padding:1.1rem;}.ex-header{padding:1.1rem 1.1rem .9rem;flex-wrap:wrap;}.ex-pts{margin-left:0;}}
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <div class="page-tag">Mathématiques · 4e · Cycle 4</div>
+  <div class="page-title">Fractions —<br><em>Exercices type contrôle</em></div>
+  <p class="page-sub">4 exercices progressifs couvrant les quatre opérations. Format proche des sujets de contrôle. Corrigés détaillés inclus.</p>
+  <div class="meta-chips">
+    <span class="chip">Programme BO cycle 4</span>
+    <span class="chip">Durée indicative : 4 × 20 min</span>
+    <span class="chip">Calculatrice non autorisée</span>
+  </div>
+</div>
+
+<!-- ══ EXERCICE 1 — ADDITION / SOUSTRACTION ══ -->
+<div class="exercise ex1">
+  <div class="ex-header">
+    <div class="ex-num">1</div>
+    <div class="ex-header-text">
+      <div class="ex-theme">Addition &amp; Soustraction</div>
+      <div class="ex-title">Calculer des sommes et différences de fractions</div>
+    </div>
+    <div class="ex-pts">6 points</div>
+  </div>
+  <div class="ex-body">
+    <div class="intro-box">
+      Pour additionner ou soustraire des fractions, les dénominateurs doivent être identiques. Si ce n'est pas le cas, on commence par les mettre au même dénominateur.
+    </div>
+
+    <div class="part">
+      <div class="part-title">Partie A — Dénominateurs identiques</div>
+      <ul class="questions">
+        <li class="q-item"><span class="q-n">1.</span><span>Calcule <span class="fr"><span class="n">3</span><span class="b"></span><span class="d">7</span></span> + <span class="fr"><span class="n">2</span><span class="b"></span><span class="d">7</span></span>. Donne le résultat sous forme simplifiée si possible.</span></li>
+        <li class="q-item"><span class="q-n">2.</span><span>Calcule <span class="fr"><span class="n">9</span><span class="b"></span><span class="d">10</span></span> − <span class="fr"><span class="n">3</span><span class="b"></span><span class="d">10</span></span>. Simplifie le résultat.</span></li>
+      </ul>
+    </div>
+
+    <div class="part">
+      <div class="part-title">Partie B — Dénominateurs différents</div>
+      <ul class="questions">
+        <li class="q-item"><span class="q-n">3.</span><span>Calcule <span class="fr"><span class="n">1</span><span class="b"></span><span class="d">3</span></span> + <span class="fr"><span class="n">1</span><span class="b"></span><span class="d">6</span></span>. Détaille le changement de dénominateur.</span></li>
+        <li class="q-item"><span class="q-n">4.</span><span>Calcule <span class="fr"><span class="n">3</span><span class="b"></span><span class="d">4</span></span> − <span class="fr"><span class="n">1</span><span class="b"></span><span class="d">3</span></span>. Justifie le choix du dénominateur commun.</span></li>
+        <li class="q-item"><span class="q-n">5.</span><span>Calcule <span class="fr"><span class="n">3</span><span class="b"></span><span class="d">8</span></span> + <span class="fr"><span class="n">5</span><span class="b"></span><span class="d">6</span></span>. Simplifie si possible.</span></li>
+        <li class="q-item"><span class="q-n">6.</span><span>Un pot de peinture est rempli aux <span class="fr"><span class="n">2</span><span class="b"></span><span class="d">3</span></span>. On utilise <span class="fr"><span class="n">1</span><span class="b"></span><span class="d">4</span></span> du pot. Quelle fraction du pot reste-t-il ?</span></li>
+      </ul>
+    </div>
+
+    <button class="corr-toggle" onclick="toggleCorr('c1')">
+      ▶ Voir la correction
+      <span class="corr-arrow" id="arr-c1">&#9654;</span>
+    </button>
+    <div class="correction" id="c1">
+      <div class="corr-header">Correction — Exercice 1</div>
+
+      <div class="corr-step"><span class="cs-n">A.1</span><div class="cs-body">
+        <strong>Dénominateurs identiques (7 = 7) → additionner les numérateurs.</strong><br>
+        <div class="result-line"><span class="fr"><span class="n">3</span><span class="b"></span><span class="d">7</span></span> + <span class="fr"><span class="n">2</span><span class="b"></span><span class="d">7</span></span> = <strong><span class="fr"><span class="n">5</span><span class="b"></span><span class="d">7</span></span></strong></div>
+        5 et 7 n'ont pas de diviseur commun → déjà simplifiée.
+      </div></div>
+
+      <div class="corr-step"><span class="cs-n">A.2</span><div class="cs-body">
+        <strong>Dénominateurs identiques (10 = 10) → soustraire les numérateurs.</strong><br>
+        <div class="result-line"><span class="fr"><span class="n">9</span><span class="b"></span><span class="d">10</span></span> − <span class="fr"><span class="n">3</span><span class="b"></span><span class="d">10</span></span> = <span class="fr"><span class="n">6</span><span class="b"></span><span class="d">10</span></span> = <strong><span class="fr"><span class="n">3</span><span class="b"></span><span class="d">5</span></span></strong></div>
+        Simplification : 6 et 10 sont tous deux divisibles par 2.
+      </div></div>
+
+      <div class="corr-step"><span class="cs-n">B.3</span><div class="cs-body">
+        <strong>Dénominateurs différents (3 et 6). Dénominateur commun = 6.</strong><br>
+        <span class="fr"><span class="n">1</span><span class="b"></span><span class="d">3</span></span> = <span class="fr"><span class="n">1×2</span><span class="b"></span><span class="d">3×2</span></span> = <span class="fr"><span class="n">2</span><span class="b"></span><span class="d">6</span></span><br>
+        <div class="result-line"><span class="fr"><span class="n">2</span><span class="b"></span><span class="d">6</span></span> + <span class="fr"><span class="n">1</span><span class="b"></span><span class="d">6</span></span> = <strong><span class="fr"><span class="n">3</span><span class="b"></span><span class="d">6</span></span> = <span class="fr"><span class="n">1</span><span class="b"></span><span class="d">2</span></span></strong></div>
+        3 divise 6 directement : multiplier 1/3 par 2/2.
+      </div></div>
+
+      <div class="corr-step"><span class="cs-n">B.4</span><div class="cs-body">
+        <strong>Dénominateurs 4 et 3. PGCD(4,3)=1 → dénominateur commun = 4×3 = 12.</strong><br>
+        <span class="fr"><span class="n">3</span><span class="b"></span><span class="d">4</span></span> = <span class="fr"><span class="n">9</span><span class="b"></span><span class="d">12</span></span> &nbsp;|&nbsp; <span class="fr"><span class="n">1</span><span class="b"></span><span class="d">3</span></span> = <span class="fr"><span class="n">4</span><span class="b"></span><span class="d">12</span></span><br>
+        <div class="result-line"><span class="fr"><span class="n">9</span><span class="b"></span><span class="d">12</span></span> − <span class="fr"><span class="n">4</span><span class="b"></span><span class="d">12</span></span> = <strong><span class="fr"><span class="n">5</span><span class="b"></span><span class="d">12</span></span></strong></div>
+        5 et 12 n'ont pas de diviseur commun → déjà simplifiée.
+        <div class="warn-box">Erreur fréquente : soustraire les dénominateurs → 4−3=1. FAUX. On convertit, on ne calcule pas avec les dénominateurs.</div>
+      </div></div>
+
+      <div class="corr-step"><span class="cs-n">B.5</span><div class="cs-body">
+        <strong>Dénominateurs 8 et 6. PPCM(8,6) = 24.</strong><br>
+        <span class="fr"><span class="n">3</span><span class="b"></span><span class="d">8</span></span> = <span class="fr"><span class="n">9</span><span class="b"></span><span class="d">24</span></span> &nbsp;|&nbsp; <span class="fr"><span class="n">5</span><span class="b"></span><span class="d">6</span></span> = <span class="fr"><span class="n">20</span><span class="b"></span><span class="d">24</span></span><br>
+        <div class="result-line"><span class="fr"><span class="n">9</span><span class="b"></span><span class="d">24</span></span> + <span class="fr"><span class="n">20</span><span class="b"></span><span class="d">24</span></span> = <strong><span class="fr"><span class="n">29</span><span class="b"></span><span class="d">24</span></span></strong></div>
+        29 et 24 n'ont pas de diviseur commun → résultat final.
+      </div></div>
+
+      <div class="corr-step"><span class="cs-n">B.6</span><div class="cs-body">
+        <strong>Problème : fraction restante = fraction initiale − fraction utilisée.</strong><br>
+        Dénominateur commun de 3 et 4 : PPCM = 12.<br>
+        <span class="fr"><span class="n">2</span><span class="b"></span><span class="d">3</span></span> = <span class="fr"><span class="n">8</span><span class="b"></span><span class="d">12</span></span> &nbsp;|&nbsp; <span class="fr"><span class="n">1</span><span class="b"></span><span class="d">4</span></span> = <span class="fr"><span class="n">3</span><span class="b"></span><span class="d">12</span></span><br>
+        <div class="result-line">Fraction restante = <span class="fr"><span class="n">8</span><span class="b"></span><span class="d">12</span></span> − <span class="fr"><span class="n">3</span><span class="b"></span><span class="d">12</span></span> = <strong><span class="fr"><span class="n">5</span><span class="b"></span><span class="d">12</span></span> du pot</strong></div>
+        <span class="ok-tag">Réponse : 5/12 du pot reste disponible</span>
+      </div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ EXERCICE 2 — MULTIPLICATION ══ -->
+<div class="exercise ex2">
+  <div class="ex-header">
+    <div class="ex-num">2</div>
+    <div class="ex-header-text">
+      <div class="ex-theme">Multiplication</div>
+      <div class="ex-title">Multiplier des fractions, simplifier en croix</div>
+    </div>
+    <div class="ex-pts">5 points</div>
+  </div>
+  <div class="ex-body">
+    <div class="intro-box">
+      Pour multiplier deux fractions : numérateur × numérateur et dénominateur × dénominateur. On peut simplifier en croix <em>avant</em> de multiplier pour faciliter le calcul.
+    </div>
+
+    <div class="part">
+      <div class="part-title">Partie A — Calculs directs</div>
+      <ul class="questions">
+        <li class="q-item"><span class="q-n">1.</span><span>Calcule <span class="fr"><span class="n">3</span><span class="b"></span><span class="d">4</span></span> × <span class="fr"><span class="n">8</span><span class="b"></span><span class="d">9</span></span>. Simplifie en croix si possible, puis donne le résultat.</span></li>
+        <li class="q-item"><span class="q-n">2.</span><span>Calcule <span class="fr"><span class="n">5</span><span class="b"></span><span class="d">6</span></span> × <span class="fr"><span class="n">3</span><span class="b"></span><span class="d">10</span></span>. Montre la simplification.</span></li>
+        <li class="q-item"><span class="q-n">3.</span><span>Calcule <span class="fr"><span class="n">7</span><span class="b"></span><span class="d">9</span></span> × <span class="fr"><span class="n">3</span><span class="b"></span><span class="d">14</span></span>. Donne le résultat simplifié.</span></li>
+      </ul>
+    </div>
+
+    <div class="part">
+      <div class="part-title">Partie B — Avec entiers et problème</div>
+      <ul class="questions">
+        <li class="q-item"><span class="q-n">4.</span><span>Calcule <span class="fr"><span class="n">2</span><span class="b"></span><span class="d">5</span></span> × 15. Donne le résultat entier.</span></li>
+        <li class="q-item"><span class="q-n">5.</span><span>Un rectangle a une longueur de <span class="fr"><span class="n">5</span><span class="b"></span><span class="d">3</span></span> m et une largeur de <span class="fr"><span class="n">3</span><span class="b"></span><span class="d">4</span></span> m. Calcule son aire (en m²).</span></li>
+      </ul>
+    </div>
+
+    <button class="corr-toggle" onclick="toggleCorr('c2')">
+      ▶ Voir la correction
+      <span class="corr-arrow" id="arr-c2">&#9654;</span>
+    </button>
+    <div class="correction" id="c2">
+      <div class="corr-header">Correction — Exercice 2</div>
+
+      <div class="corr-step"><span class="cs-n">A.1</span><div class="cs-body">
+        <strong>Simplification en croix : 3 et 9 (÷3) → 1 et 3 ; 8 et 4 (÷4) → 2 et 1.</strong><br>
+        <div class="result-line"><span class="fr"><span class="n">3</span><span class="b"></span><span class="d">4</span></span> × <span class="fr"><span class="n">8</span><span class="b"></span><span class="d">9</span></span> = <span class="fr"><span class="n">1</span><span class="b"></span><span class="d">1</span></span> × <span class="fr"><span class="n">2</span><span class="b"></span><span class="d">3</span></span> = <strong><span class="fr"><span class="n">2</span><span class="b"></span><span class="d">3</span></span></strong></div>
+        Vérification : 3×8=24 et 4×9=36 → 24/36 = 2/3 ✓
+      </div></div>
+
+      <div class="corr-step"><span class="cs-n">A.2</span><div class="cs-body">
+        <strong>Simplification en croix : 5 et 10 (÷5) → 1 et 2 ; 3 et 6 (÷3) → 1 et 2.</strong><br>
+        <div class="result-line"><span class="fr"><span class="n">5</span><span class="b"></span><span class="d">6</span></span> × <span class="fr"><span class="n">3</span><span class="b"></span><span class="d">10</span></span> = <span class="fr"><span class="n">1</span><span class="b"></span><span class="d">2</span></span> × <span class="fr"><span class="n">1</span><span class="b"></span><span class="d">2</span></span> = <strong><span class="fr"><span class="n">1</span><span class="b"></span><span class="d">4</span></span></strong></div>
+      </div></div>
+
+      <div class="corr-step"><span class="cs-n">A.3</span><div class="cs-body">
+        <strong>Simplification en croix : 7 et 14 (÷7) → 1 et 2 ; 3 et 9 (÷3) → 1 et 3.</strong><br>
+        <div class="result-line"><span class="fr"><span class="n">7</span><span class="b"></span><span class="d">9</span></span> × <span class="fr"><span class="n">3</span><span class="b"></span><span class="d">14</span></span> = <span class="fr"><span class="n">1</span><span class="b"></span><span class="d">3</span></span> × <span class="fr"><span class="n">1</span><span class="b"></span><span class="d">2</span></span> = <strong><span class="fr"><span class="n">1</span><span class="b"></span><span class="d">6</span></span></strong></div>
+      </div></div>
+
+      <div class="corr-step"><span class="cs-n">B.4</span><div class="cs-body">
+        <strong>Écrire 15 = 15/1, puis multiplier.</strong><br>
+        <div class="result-line"><span class="fr"><span class="n">2</span><span class="b"></span><span class="d">5</span></span> × 15 = <span class="fr"><span class="n">2×15</span><span class="b"></span><span class="d">5</span></span> = <span class="fr"><span class="n">30</span><span class="b"></span><span class="d">5</span></span> = <strong>6</strong></div>
+        Raccourci : 15÷5 = 3, puis 3×2 = 6.
+      </div></div>
+
+      <div class="corr-step"><span class="cs-n">B.5</span><div class="cs-body">
+        <strong>Aire = longueur × largeur.</strong><br>
+        Simplification en croix : 5 et 5 (÷5) → 1 et 1 ; 3 et 3 (÷3) → 1 et 1.<br>
+        <div class="result-line">Aire = <span class="fr"><span class="n">5</span><span class="b"></span><span class="d">3</span></span> × <span class="fr"><span class="n">3</span><span class="b"></span><span class="d">4</span></span> = <span class="fr"><span class="n">1</span><span class="b"></span><span class="d">1</span></span> × <span class="fr"><span class="n">1</span><span class="b"></span><span class="d">4</span></span> × ... = <strong><span class="fr"><span class="n">15</span><span class="b"></span><span class="d">12</span></span> = <span class="fr"><span class="n">5</span><span class="b"></span><span class="d">4</span></span> m²</strong></div>
+        5×3 = 15 et 3×4 = 12. Simplification : 15/12 → ÷3 → 5/4 m².
+        <span class="ok-tag">Aire = 5/4 m² = 1,25 m²</span>
+      </div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ EXERCICE 3 — DIVISION ══ -->
+<div class="exercise ex3">
+  <div class="ex-header">
+    <div class="ex-num">3</div>
+    <div class="ex-header-text">
+      <div class="ex-theme">Division</div>
+      <div class="ex-title">Diviser des fractions — garder, retourner, multiplier</div>
+    </div>
+    <div class="ex-pts">5 points</div>
+  </div>
+  <div class="ex-body">
+    <div class="intro-box">
+      Pour diviser par une fraction, on multiplie par son inverse (on retourne la fraction de droite). On garde la première fraction, on retourne la seconde, on multiplie.
+    </div>
+
+    <div class="part">
+      <div class="part-title">Partie A — Calculs directs</div>
+      <ul class="questions">
+        <li class="q-item"><span class="q-n">1.</span><span>Calcule <span class="fr"><span class="n">2</span><span class="b"></span><span class="d">3</span></span> ÷ <span class="fr"><span class="n">4</span><span class="b"></span><span class="d">9</span></span>. Montre la transformation en multiplication.</span></li>
+        <li class="q-item"><span class="q-n">2.</span><span>Calcule <span class="fr"><span class="n">5</span><span class="b"></span><span class="d">8</span></span> ÷ <span class="fr"><span class="n">5</span><span class="b"></span><span class="d">4</span></span>. Simplifie le résultat.</span></li>
+        <li class="q-item"><span class="q-n">3.</span><span>Calcule <span class="fr"><span class="n">3</span><span class="b"></span><span class="d">7</span></span> ÷ 6. Écris d'abord 6 sous forme de fraction.</span></li>
+      </ul>
+    </div>
+
+    <div class="part">
+      <div class="part-title">Partie B — Problème</div>
+      <ul class="questions">
+        <li class="q-item"><span class="q-n">4.</span><span>Un ruban de <span class="fr"><span class="n">5</span><span class="b"></span><span class="d">6</span></span> m est découpé en morceaux de <span class="fr"><span class="n">5</span><span class="b"></span><span class="d">18</span></span> m chacun. Combien de morceaux obtient-on ?</span></li>
+        <li class="q-item"><span class="q-n">5.</span><span>Vrai ou faux ? « Diviser par <span class="fr"><span class="n">1</span><span class="b"></span><span class="d">3</span></span>, c'est pareil que diviser par 3. » Justifie.</span></li>
+      </ul>
+    </div>
+
+    <button class="corr-toggle" onclick="toggleCorr('c3')">
+      ▶ Voir la correction
+      <span class="corr-arrow" id="arr-c3">&#9654;</span>
+    </button>
+    <div class="correction" id="c3">
+      <div class="corr-header">Correction — Exercice 3</div>
+
+      <div class="corr-step"><span class="cs-n">A.1</span><div class="cs-body">
+        <strong>Diviser par 4/9 → multiplier par 9/4 (l'inverse).</strong><br>
+        <div class="result-line"><span class="fr"><span class="n">2</span><span class="b"></span><span class="d">3</span></span> ÷ <span class="fr"><span class="n">4</span><span class="b"></span><span class="d">9</span></span> = <span class="fr"><span class="n">2</span><span class="b"></span><span class="d">3</span></span> × <span class="fr"><span class="n">9</span><span class="b"></span><span class="d">4</span></span> = <span class="fr"><span class="n">18</span><span class="b"></span><span class="d">12</span></span> = <strong><span class="fr"><span class="n">3</span><span class="b"></span><span class="d">2</span></span></strong></div>
+        Simplification en croix : 2 et 4 (÷2) → 1 et 2 ; 9 et 3 (÷3) → 3 et 1. Reste 1/1 × 3/2 = 3/2.
+      </div></div>
+
+      <div class="corr-step"><span class="cs-n">A.2</span><div class="cs-body">
+        <strong>Diviser par 5/4 → multiplier par 4/5.</strong><br>
+        <div class="result-line"><span class="fr"><span class="n">5</span><span class="b"></span><span class="d">8</span></span> ÷ <span class="fr"><span class="n">5</span><span class="b"></span><span class="d">4</span></span> = <span class="fr"><span class="n">5</span><span class="b"></span><span class="d">8</span></span> × <span class="fr"><span class="n">4</span><span class="b"></span><span class="d">5</span></span> = <span class="fr"><span class="n">20</span><span class="b"></span><span class="d">40</span></span> = <strong><span class="fr"><span class="n">1</span><span class="b"></span><span class="d">2</span></span></strong></div>
+        Les 5 se simplifient ; 4 et 8 (÷4) → 1 et 2. Reste 1/1 × 1/2 = 1/2.
+      </div></div>
+
+      <div class="corr-step"><span class="cs-n">A.3</span><div class="cs-body">
+        <strong>Écrire 6 = 6/1. Diviser par 6 → multiplier par 1/6.</strong><br>
+        <div class="result-line"><span class="fr"><span class="n">3</span><span class="b"></span><span class="d">7</span></span> ÷ 6 = <span class="fr"><span class="n">3</span><span class="b"></span><span class="d">7</span></span> × <span class="fr"><span class="n">1</span><span class="b"></span><span class="d">6</span></span> = <span class="fr"><span class="n">3</span><span class="b"></span><span class="d">42</span></span> = <strong><span class="fr"><span class="n">1</span><span class="b"></span><span class="d">14</span></span></strong></div>
+        3 et 42 sont divisibles par 3 → 1/14.
+      </div></div>
+
+      <div class="corr-step"><span class="cs-n">B.4</span><div class="cs-body">
+        <strong>Nombre de morceaux = longueur totale ÷ longueur d'un morceau.</strong><br>
+        <span class="fr"><span class="n">5</span><span class="b"></span><span class="d">6</span></span> ÷ <span class="fr"><span class="n">5</span><span class="b"></span><span class="d">18</span></span> = <span class="fr"><span class="n">5</span><span class="b"></span><span class="d">6</span></span> × <span class="fr"><span class="n">18</span><span class="b"></span><span class="d">5</span></span><br>
+        Simplification : les 5 se simplifient ; 18 et 6 (÷6) → 3 et 1.<br>
+        <div class="result-line">= <span class="fr"><span class="n">1</span><span class="b"></span><span class="d">1</span></span> × <span class="fr"><span class="n">3</span><span class="b"></span><span class="d">1</span></span> = <strong>3 morceaux</strong></div>
+        <span class="ok-tag">On obtient 3 morceaux.</span>
+      </div></div>
+
+      <div class="corr-step"><span class="cs-n">B.5</span><div class="cs-body">
+        <strong>FAUX.</strong><br>
+        Diviser par <span class="fr"><span class="n">1</span><span class="b"></span><span class="d">3</span></span> = multiplier par 3 (l'inverse de 1/3).<br>
+        Diviser par 3 = multiplier par <span class="fr"><span class="n">1</span><span class="b"></span><span class="d">3</span></span>.<br>
+        <div class="result-line">Ce sont deux opérations <strong>opposées</strong> : ÷(1/3) = ×3 et ÷3 = ×(1/3).</div>
+        <div class="warn-box">Exemple : 6 ÷ (1/3) = 6 × 3 = 18. Et 6 ÷ 3 = 2. Ce n'est pas pareil !</div>
+      </div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ EXERCICE 4 — MÉLANGE + SIMPLIFICATION ══ -->
+<div class="exercise ex4">
+  <div class="ex-header">
+    <div class="ex-num">4</div>
+    <div class="ex-header-text">
+      <div class="ex-theme">Récapitulatif — Toutes opérations</div>
+      <div class="ex-title">Choisir la bonne méthode et simplifier</div>
+    </div>
+    <div class="ex-pts">7 points</div>
+  </div>
+  <div class="ex-body">
+    <div class="intro-box">
+      Pour chaque calcul, commence par identifier l'opération. La méthode dépend entièrement de l'opération : addition/soustraction → dénominateur commun ; multiplication/division → pas de dénominateur commun.
+    </div>
+
+    <div class="part">
+      <div class="part-title">Partie A — Calculs à identifier</div>
+      <ul class="questions">
+        <li class="q-item"><span class="q-n">1.</span><span>Calcule <span class="fr"><span class="n">2</span><span class="b"></span><span class="d">3</span></span> + <span class="fr"><span class="n">1</span><span class="b"></span><span class="d">4</span></span>. Justifie chaque étape.</span></li>
+        <li class="q-item"><span class="q-n">2.</span><span>Calcule <span class="fr"><span class="n">2</span><span class="b"></span><span class="d">3</span></span> × <span class="fr"><span class="n">1</span><span class="b"></span><span class="d">4</span></span>. Même calcul, opération différente.</span></li>
+        <li class="q-item"><span class="q-n">3.</span><span>Calcule <span class="fr"><span class="n">7</span><span class="b"></span><span class="d">12</span></span> − <span class="fr"><span class="n">1</span><span class="b"></span><span class="d">4</span></span>. Simplifie le résultat.</span></li>
+        <li class="q-item"><span class="q-n">4.</span><span>Calcule <span class="fr"><span class="n">4</span><span class="b"></span><span class="d">9</span></span> ÷ <span class="fr"><span class="n">2</span><span class="b"></span><span class="d">3</span></span>. Simplifie.</span></li>
+      </ul>
+    </div>
+
+    <div class="part">
+      <div class="part-title">Partie B — Problème de la vie courante</div>
+      <ul class="questions">
+        <li class="q-item"><span class="q-n">5.</span><span>Un cuisinier utilise <span class="fr"><span class="n">3</span><span class="b"></span><span class="d">4</span></span> de litre de lait pour une recette. Il veut en faire 6 fois la recette. Combien de litres de lait lui faut-il ?</span></li>
+        <li class="q-item"><span class="q-n">6.</span><span>Il lui reste <span class="fr"><span class="n">5</span><span class="b"></span><span class="d">2</span></span> litres de lait. Après avoir fait ses 6 recettes, quelle fraction de litre lui reste-t-il ? (Utilise les résultats précédents.)</span></li>
+        <li class="q-item"><span class="q-n">7.</span><span>Montre que le résultat de la question 6 peut aussi s'écrire comme un nombre entier ou un nombre mixte.</span></li>
+      </ul>
+    </div>
+
+    <button class="corr-toggle" onclick="toggleCorr('c4')">
+      ▶ Voir la correction
+      <span class="corr-arrow" id="arr-c4">&#9654;</span>
+    </button>
+    <div class="correction" id="c4">
+      <div class="corr-header">Correction — Exercice 4</div>
+
+      <div class="corr-step"><span class="cs-n">A.1</span><div class="cs-body">
+        <strong>Addition → dénominateur commun = 12.</strong><br>
+        <span class="fr"><span class="n">2</span><span class="b"></span><span class="d">3</span></span> = <span class="fr"><span class="n">8</span><span class="b"></span><span class="d">12</span></span> &nbsp;|&nbsp; <span class="fr"><span class="n">1</span><span class="b"></span><span class="d">4</span></span> = <span class="fr"><span class="n">3</span><span class="b"></span><span class="d">12</span></span><br>
+        <div class="result-line"><strong><span class="fr"><span class="n">8</span><span class="b"></span><span class="d">12</span></span> + <span class="fr"><span class="n">3</span><span class="b"></span><span class="d">12</span></span> = <span class="fr"><span class="n">11</span><span class="b"></span><span class="d">12</span></span></strong></div>
+      </div></div>
+
+      <div class="corr-step"><span class="cs-n">A.2</span><div class="cs-body">
+        <strong>Multiplication → pas de dénominateur commun, on multiplie directement.</strong><br>
+        <div class="result-line"><span class="fr"><span class="n">2</span><span class="b"></span><span class="d">3</span></span> × <span class="fr"><span class="n">1</span><span class="b"></span><span class="d">4</span></span> = <span class="fr"><span class="n">2</span><span class="b"></span><span class="d">12</span></span> = <strong><span class="fr"><span class="n">1</span><span class="b"></span><span class="d">6</span></span></strong></div>
+        <div class="warn-box">Même calcul, opération différente → résultat différent ! 11/12 ≠ 1/6. Bien identifier l'opération avant tout.</div>
+      </div></div>
+
+      <div class="corr-step"><span class="cs-n">A.3</span><div class="cs-body">
+        <strong>Soustraction → dénominateur commun = 12.</strong><br>
+        <span class="fr"><span class="n">1</span><span class="b"></span><span class="d">4</span></span> = <span class="fr"><span class="n">3</span><span class="b"></span><span class="d">12</span></span><br>
+        <div class="result-line"><span class="fr"><span class="n">7</span><span class="b"></span><span class="d">12</span></span> − <span class="fr"><span class="n">3</span><span class="b"></span><span class="d">12</span></span> = <span class="fr"><span class="n">4</span><span class="b"></span><span class="d">12</span></span> = <strong><span class="fr"><span class="n">1</span><span class="b"></span><span class="d">3</span></span></strong></div>
+      </div></div>
+
+      <div class="corr-step"><span class="cs-n">A.4</span><div class="cs-body">
+        <strong>Division → multiplier par l'inverse de 2/3, soit 3/2.</strong><br>
+        <div class="result-line"><span class="fr"><span class="n">4</span><span class="b"></span><span class="d">9</span></span> × <span class="fr"><span class="n">3</span><span class="b"></span><span class="d">2</span></span> = <span class="fr"><span class="n">12</span><span class="b"></span><span class="d">18</span></span> = <strong><span class="fr"><span class="n">2</span><span class="b"></span><span class="d">3</span></span></strong></div>
+        Simplification en croix : 3 et 9 (÷3) → 1 et 3 ; 4 et 2 (÷2) → 2 et 1. Reste 2/3 × 1/1 = 2/3.
+      </div></div>
+
+      <div class="corr-step"><span class="cs-n">B.5</span><div class="cs-body">
+        <strong>Lait nécessaire = <span class="fr"><span class="n">3</span><span class="b"></span><span class="d">4</span></span> × 6.</strong><br>
+        <div class="result-line"><span class="fr"><span class="n">3</span><span class="b"></span><span class="d">4</span></span> × 6 = <span class="fr"><span class="n">18</span><span class="b"></span><span class="d">4</span></span> = <strong><span class="fr"><span class="n">9</span><span class="b"></span><span class="d">2</span></span> litres = 4,5 L</strong></div>
+      </div></div>
+
+      <div class="corr-step"><span class="cs-n">B.6</span><div class="cs-body">
+        <strong>Lait restant = lait initial − lait utilisé = <span class="fr"><span class="n">5</span><span class="b"></span><span class="d">2</span></span> − <span class="fr"><span class="n">9</span><span class="b"></span><span class="d">2</span></span>.</strong><br>
+        Dénominateurs identiques (2 = 2).<br>
+        <div class="result-line"><span class="fr"><span class="n">5</span><span class="b"></span><span class="d">2</span></span> − <span class="fr"><span class="n">9</span><span class="b"></span><span class="d">2</span></span> = <span class="fr"><span class="n">5−9</span><span class="b"></span><span class="d">2</span></span> = <strong><span class="fr"><span class="n">−4</span><span class="b"></span><span class="d">2</span></span> = −2</strong></div>
+        <div class="warn-box">Résultat négatif : le cuisinier n'a pas assez de lait ! Il manque 2 litres. Les nombres rationnels négatifs sont au programme du cycle 4.</div>
+      </div></div>
+
+      <div class="corr-step"><span class="cs-n">B.7</span><div class="cs-body">
+        <div class="result-line"><span class="fr"><span class="n">−4</span><span class="b"></span><span class="d">2</span></span> = −4 ÷ 2 = <strong>−2</strong></div>
+        C'est un entier relatif. Interprétation : il lui manque exactement 2 litres.
+        <span class="ok-tag">−4/2 = −2 (entier)</span>
+      </div></div>
+    </div>
+  </div>
+</div>
+
+<script>
+function toggleCorr(id){
+  const panel=document.getElementById(id);
+  const arrow=document.getElementById('arr-'+id);
+  const isOpen=panel.classList.contains('visible');
+  panel.classList.toggle('visible',!isOpen);
+  arrow.classList.toggle('open',!isOpen);
+}
+</script>
+</body>
+</html>
