@@ -383,19 +383,19 @@ const Q = [
     insight: "Formule tangente à retenir : y = f'(a)(x − a) + f(a). Calculer d'abord f'(a) (pente), puis f(a) (ordonnée du point de contact)."
   },
   {
-    ctx: "f(x) = x³ − 3x² + 2. f est continue sur [0 ; 3]. f(0) = 2, f(3) = −4.",
-    q: "Peut-on affirmer qu'il existe c ∈ ]0 ; 3[ tel que f(c) = 0 ?",
+    ctx: "f(x) = x³ − 3x² + 2. f est continue sur [0 ; 2]. f(0) = 2, f(2) = −2.",
+    q: "Peut-on affirmer qu'il existe c ∈ ]0 ; 2[ tel que f(c) = 0 ?",
     choices: [
       "Non, f n'est pas forcément nulle",
-      "Oui, car f est continue et change de signe entre 0 et 3",
+      "Oui, car f est continue et change de signe entre 0 et 2",
       "Oui, mais seulement si f est dérivable",
       "Non, il faudrait connaître f' pour conclure"
     ],
     correct: 1,
     ok: "Exact !",
-    ok_body: "TVI (corollaire) : f continue sur [a,b], f(a) et f(b) de signes opposés → il existe au moins un c ∈ ]a,b[ tel que f(c) = 0. Ici f(0)=2 > 0 et f(3)=−4 < 0 → il existe c ∈ ]0;3[ avec f(c) = 0.",
+    ok_body: "TVI (corollaire) : f continue sur [a,b], f(a) et f(b) de signes opposés → il existe au moins un c ∈ ]a,b[ tel que f(c) = 0. Ici f(0)=2 > 0 et f(2)=−2 < 0 → il existe c ∈ ]0;2[ avec f(c) = 0.",
     ko: "Pas tout à fait.",
-    ko_body: "C'est une application directe du TVI (corollaire de Bolzano) : f continue sur [0,3], f(0)=2>0 et f(3)=−4<0 → signes opposés → existence garantie de c ∈ ]0;3[ tel que f(c)=0. La dérivabilité n'est pas requise pour le TVI.",
+    ko_body: "C'est une application directe du TVI (corollaire) : f continue sur [0,2], f(0)=2>0 et f(2)=−2<0 → signes opposés → existence garantie de c ∈ ]0;2[ tel que f(c)=0. La dérivabilité n'est pas requise pour le TVI, seulement la continuité.",
     insight: "TVI, corollaire : f continue sur [a,b] + f(a)·f(b) < 0 → ∃ c ∈ ]a,b[ tel que f(c) = 0. Déclencheur : « montrer qu'une équation a une solution » sur un intervalle."
   },
   {

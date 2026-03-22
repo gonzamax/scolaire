@@ -564,13 +564,13 @@ const Q = [
   {
     ctx: "Un tiercé classique en hippisme consiste à trouver les 3 premiers chevaux d'une course dans l'ordre exact. Il y a 10 chevaux en compétition.",
     q: "Combien de tiercés dans l'ordre sont possibles ?",
-    choices: ["C(10, 3) = 120", "A(10, 3) = 720", "C(10,3) × 3! = 720", "10³ = 1 000"],
+    choices: ["C(10, 3) = 120", "A(10, 3) = 720", "10 × 9 × 8 × 7 = 5 040", "10³ = 1 000"],
     correct: 1,
     ok: "Bonne réponse !",
-    ok_body: "« Dans l'ordre exact » : l'ordre des 3 premiers chevaux est important. L'ordre compte → <code>A(10,3) = 10×9×8 = 720</code>.",
+    ok_body: "« Dans l'ordre exact » : l'ordre des 3 premiers chevaux compte (1er ≠ 2ème ≠ 3ème). L'ordre compte, sans répétition → <code>A(10,3) = 10×9×8 = 720</code>.",
     ko: "Pas tout à fait.",
-    ko_body: "L'énoncé précise « dans l'ordre exact » : l'ordre compte. Arrangement : <code>A(10,3) = 10×9×8 = 720</code>. Attention : C(10,3) × 3! = 120 × 6 = 720 également, car multiplier une combinaison par k! redonne l'arrangement.",
-    insight: "« Dans l'ordre » dans un énoncé = arrangement. C'est un des déclencheurs les plus fiables."
+    ko_body: "L'énoncé précise « dans l'ordre exact » : les positions 1ère, 2ème et 3ème sont distinctes → arrangement. <code>A(10,3) = 10×9×8 = 720</code>. Attention : 10×9×8×7 serait A(10,4) (4 positions) ; 10³ autoriserait les répétitions.",
+    insight: "« Dans l'ordre » dans un énoncé = arrangement. On prend autant de facteurs décroissants qu'il y a de positions à pourvoir."
   },
   {
     ctx: "Un jeu de 52 cartes. On tire 5 cartes. On cherche les mains contenant exactement 2 rois (il y a 4 rois dans le jeu).",

@@ -203,7 +203,7 @@ const Q=[
   {
     ctx:"y' = −y + 2,  y(0) = 0",
     q:"Quelle est la solution particulière vérifiant y(0) = 0 ?",
-    choices:["y = 2e^(−x)","y = 2 − 2e^(−x)","y = e^(−x) + 2","y = −2e^(−x) + 2"],
+    choices:["y = 2e^(−x)","y = 2e^(−x) − 2","y = e^(−x) + 2","y = −2e^(−x) + 2"],
     correct:3,
     ok:"Parfait !",
     ok_body:"y_p constante : y' = 0 → −y+2=0 → y_p = 2.<br>Solution générale : <code>y = Ce^(−x) + 2</code>.<br>y(0) = C + 2 = 0 → C = −2.<br>Solution : <code>y = −2e^(−x) + 2</code>.",
@@ -252,7 +252,7 @@ const Q=[
   {
     ctx:"y' = −3y + 9,  y(0) = 4",
     q:"Quelle est la solution particulière de cette équation ?",
-    choices:["y = 4e^(−3x) + 9","y = e^(−3x) + 3","y = e^(−3x) + 4","y = 3 + e^(−3x)"],
+    choices:["y = 4e^(−3x) + 9","y = e^(−3x) + 3","y = e^(−3x) + 4","y = e^(−3x) − 3"],
     correct:1,
     ok:"Excellent !",
     ok_body:"Étapes :<br>1. y_p : 0 = −3y+9 → y_p = 3<br>2. y_général : Ce^(−3x) + 3<br>3. y(0) = C + 3 = 4 → C = 1<br>4. Solution : <code>y = e^(−3x) + 3</code><br>Vérification : y' = −3e^(−3x) ; −3y+9 = −3(e^(−3x)+3)+9 = −3e^(−3x) ✓",
