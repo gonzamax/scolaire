@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fonctions — Entraînement Bac Spé Maths</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Syne:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0f1e;
+    --surface: #111827;
+    --surface2: #1a2235;
+    --border: rgba(255,255,255,0.07);
+    --border2: rgba(255,255,255,0.13);
+    --text: #e8eaf6;
+    --muted: #7986a8;
+    --accent: #7dd3fc;
+    --accent-dim: rgba(125,211,252,0.1);
+    --accent-border: rgba(125,211,252,0.35);
+    --red: #fb7185;
+    --red-dim: rgba(251,113,133,0.1);
+    --red-border: rgba(251,113,133,0.3);
+    --radius: 10px;
+    --radius-lg: 16px;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Syne', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 1rem 4rem;
+  }
+  header {
+    width: 100%;
+    max-width: 720px;
+    padding: 3rem 0 2.5rem;
+    border-bottom: 0.5px solid var(--border2);
+    margin-bottom: 2.5rem;
+  }
+  .header-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--accent);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 0.75rem;
+  }
+  h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(2rem, 5vw, 3rem);
+    font-weight: 400;
+    line-height: 1.15;
+    margin-bottom: 0.75rem;
+  }
+  h1 em { font-style: italic; color: var(--accent); }
+  .header-sub { font-size: 14px; color: var(--muted); line-height: 1.6; }
+  .progress-bar-wrap { width: 100%; max-width: 720px; margin-bottom: 2rem; }
+  .progress-meta {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: var(--muted);
+    font-family: 'DM Mono', monospace;
+    margin-bottom: 8px;
+  }
+  .progress-track { height: 3px; background: var(--surface2); border-radius: 99px; overflow: hidden; }
+  .progress-fill { height: 100%; background: var(--accent); border-radius: 99px; transition: width 0.5s cubic-bezier(0.4,0,0.2,1); }
+  .quiz-card {
+    width: 100%;
+    max-width: 720px;
+    background: var(--surface);
+    border: 0.5px solid var(--border2);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    animation: slideIn 0.35s cubic-bezier(0.4,0,0.2,1);
+  }
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .card-top {
+    padding: 1.5rem 1.75rem 1.25rem;
+    border-bottom: 0.5px solid var(--border);
+  }
+  .context-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 0.5rem;
+  }
+  .context-text {
+    font-size: 13px;
+    color: rgba(232,234,246,0.6);
+    line-height: 1.65;
+    padding: 10px 14px;
+    background: var(--surface2);
+    border-radius: var(--radius);
+    border-left: 2px solid var(--border2);
+    font-family: 'DM Mono', monospace;
+  }
+  .card-body { padding: 1.5rem 1.75rem; }
+  .question-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 0.06em;
+    margin-bottom: 0.6rem;
+  }
+  .question-text {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.18rem;
+    font-weight: 400;
+    line-height: 1.45;
+    margin-bottom: 1.5rem;
+  }
+  .choices-label {
+    font-size: 11px;
+    font-family: 'DM Mono', monospace;
+    color: var(--muted);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  .choices { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 1.25rem; }
+  @media (max-width: 500px) { .choices { grid-template-columns: 1fr; } }
+  .choice {
+    background: var(--surface2);
+    border: 0.5px solid var(--border2);
+    border-radius: var(--radius);
+    padding: 11px 14px;
+    font-size: 13px;
+    font-family: 'DM Mono', monospace;
+    color: var(--text);
+    cursor: pointer;
+    text-align: left;
+    line-height: 1.5;
+    transition: background 0.15s, border 0.15s, transform 0.1s;
+  }
+  .choice:hover:not(:disabled) { background: rgba(255,255,255,0.05); transform: translateY(-1px); }
+  .choice:active:not(:disabled) { transform: translateY(0); }
+  .choice:disabled { cursor: default; }
+  .choice.correct { background: rgba(125,211,252,0.08); border: 1.5px solid var(--accent-border); color: var(--accent); }
+  .choice.wrong { background: var(--red-dim); border: 1.5px solid var(--red-border); color: var(--red); text-decoration: line-through; opacity: 0.7; }
+  .choice-letter {
+    display: inline-block;
+    width: 18px; height: 18px;
+    border-radius: 4px;
+    background: var(--border);
+    font-size: 10px; font-weight: 500;
+    text-align: center; line-height: 18px;
+    margin-right: 8px;
+  }
+  .choice.correct .choice-letter { background: rgba(125,211,252,0.2); color: var(--accent); }
+  .choice.wrong .choice-letter { background: rgba(251,113,133,0.15); color: var(--red); }
+  .feedback {
+    border-radius: var(--radius);
+    padding: 14px 16px;
+    font-size: 13px;
+    line-height: 1.75;
+    margin-bottom: 1.25rem;
+    display: none;
+    animation: fadeIn 0.25s ease;
+  }
+  @keyframes fadeIn { from { opacity:0; transform:translateY(4px); } to { opacity:1; transform:translateY(0); } }
+  .feedback.show { display: block; }
+  .feedback.ok { background: rgba(125,211,252,0.06); border: 0.5px solid var(--accent-border); color: rgba(125,211,252,0.9); }
+  .feedback.ko { background: var(--red-dim); border: 0.5px solid var(--red-border); color: rgba(251,150,165,0.9); }
+  .feedback .fb-head { font-weight: 600; display: flex; align-items: center; gap: 8px; margin-bottom: 6px; font-size: 13px; }
+  .fb-icon { width: 18px; height: 18px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; flex-shrink: 0; }
+  .fb-icon.ok { background: var(--accent); color: #0a0f1e; }
+  .fb-icon.ko { background: var(--red); color: #0a0f1e; }
+  code { font-family: 'DM Mono', monospace; font-size: 12px; background: rgba(255,255,255,0.07); padding: 1px 5px; border-radius: 4px; }
+  .insight {
+    background: rgba(255,255,255,0.025);
+    border-left: 2px solid rgba(255,255,255,0.15);
+    border-radius: 0 var(--radius) var(--radius) 0;
+    padding: 10px 14px;
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.6;
+    margin-top: 8px;
+  }
+  .insight strong { color: rgba(232,234,246,0.65); font-weight: 500; }
+  .next-btn {
+    background: var(--accent);
+    color: #0a0f1e;
+    border: none;
+    border-radius: var(--radius);
+    padding: 11px 24px;
+    font-family: 'Syne', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    display: none;
+    transition: opacity 0.15s, transform 0.1s;
+  }
+  .next-btn:hover { opacity: 0.88; transform: translateY(-1px); }
+  .next-btn.show { display: inline-block; }
+  .score-screen { width: 100%; max-width: 720px; display: none; animation: slideIn 0.4s cubic-bezier(0.4,0,0.2,1); }
+  .score-screen.show { display: block; }
+  .score-hero {
+    background: var(--surface);
+    border: 0.5px solid var(--border2);
+    border-radius: var(--radius-lg);
+    padding: 3rem 2rem;
+    text-align: center;
+    margin-bottom: 1.5rem;
+  }
+  .score-fraction { font-family: 'DM Serif Display', serif; font-size: 5rem; font-weight: 400; line-height: 1; margin-bottom: 0.5rem; }
+  .score-fraction span { color: var(--accent); }
+  .score-fraction .denom { color: var(--muted); font-size: 3rem; }
+  .score-msg { font-size: 15px; color: var(--muted); line-height: 1.6; max-width: 400px; margin: 0 auto 2rem; }
+  .score-actions { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+  .btn-restart {
+    background: transparent; color: var(--text);
+    border: 0.5px solid var(--border2);
+    border-radius: var(--radius);
+    padding: 10px 22px;
+    font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 500;
+    cursor: pointer; transition: background 0.15s;
+  }
+  .btn-restart:hover { background: var(--surface2); }
+  .recap-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 8px; }
+  .recap-item {
+    background: var(--surface); border: 0.5px solid var(--border);
+    border-radius: var(--radius); padding: 12px 14px;
+    display: flex; align-items: flex-start; gap: 10px;
+  }
+  .recap-dot { width: 8px; height: 8px; border-radius: 50%; margin-top: 5px; flex-shrink: 0; }
+  .recap-dot.ok { background: var(--accent); }
+  .recap-dot.ko { background: var(--red); }
+  .recap-q { font-size: 12px; color: var(--muted); line-height: 1.5; }
+  .recap-q strong { color: var(--text); display: block; font-size: 13px; margin-bottom: 2px; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-tag">Terminale · Spécialité Maths · Bac 2026</div>
+  <h1>Fonctions —<br><em>Identifier le bon outil</em></h1>
+  <p class="header-sub">10 questions sur les limites, dérivées, variations, convexité et fonctions usuelles. Pour chaque situation : quelle technique déclencher ?</p>
+</header>
+
+<div class="progress-bar-wrap" id="progress-wrap">
+  <div class="progress-meta">
+    <span id="prog-label">Question 1 / 10</span>
+    <span id="prog-score">0 correcte(s)</span>
+  </div>
+  <div class="progress-track"><div class="progress-fill" id="prog-fill" style="width:0%"></div></div>
+</div>
+
+<div class="quiz-card" id="quiz-card">
+  <div class="card-top">
+    <div class="context-label">Situation</div>
+    <div class="context-text" id="q-context"></div>
+  </div>
+  <div class="card-body">
+    <div class="question-num" id="q-num"></div>
+    <div class="question-text" id="q-text"></div>
+    <div class="choices-label">Quelle est la bonne réponse / technique ?</div>
+    <div class="choices" id="choices"></div>
+    <div class="feedback" id="feedback">
+      <div class="fb-head"><span class="fb-icon" id="fb-icon"></span><span id="fb-head-text"></span></div>
+      <div id="fb-body"></div>
+      <div class="insight" id="fb-insight" style="display:none"></div>
+    </div>
+    <button class="next-btn" id="next-btn" onclick="nextQuestion()">Question suivante →</button>
+  </div>
+</div>
+
+<div class="score-screen" id="score-screen">
+  <div class="score-hero">
+    <div class="score-fraction" id="score-frac"></div>
+    <p class="score-msg" id="score-msg"></p>
+    <div class="score-actions">
+      <button class="btn-restart" onclick="restart()">↺ Recommencer</button>
+    </div>
+  </div>
+  <div class="recap-grid" id="recap-grid"></div>
+</div>
+
+<script>
+const Q = [
+  {
+    ctx: "f(x) = (3x² − 1) / (x − 2)",
+    q: "Quelle est la limite de f(x) quand x → +∞ ?",
+    choices: ["+∞", "3", "−1/2", "0"],
+    correct: 0,
+    ok: "Exact !",
+    ok_body: "Pour une fraction de polynômes, on regarde les termes de plus haut degré. Ici num ~ 3x² et dén ~ x. Donc f(x) ~ 3x²/x = 3x → +∞.",
+    ko: "Pas tout à fait.",
+    ko_body: "Quand x → +∞, on regarde les termes dominants : num ~ 3x², dén ~ x. Donc f(x) ~ 3x²/x = 3x → +∞. Piège classique : ne pas regarder uniquement les coefficients.",
+    insight: "Réflexe : pour lim en ±∞ d'une fraction rationnelle, ne comparer que les monômes de plus haut degré au numérateur et au dénominateur."
+  },
+  {
+    ctx: "f(x) = (x² − 4) / (x − 2)",
+    q: "Quelle est la limite de f(x) quand x → 2 ?",
+    choices: ["Indéterminée, pas de limite", "4", "+∞", "0"],
+    correct: 1,
+    ok: "Correct !",
+    ok_body: "Forme 0/0 → lever l'indétermination en factorisant : x² − 4 = (x−2)(x+2). Donc f(x) = (x+2) pour x ≠ 2 → limite = 2 + 2 = 4.",
+    ko: "Attention.",
+    ko_body: "On obtient la forme 0/0 : il faut factoriser. x² − 4 = (x−2)(x+2), donc f(x) = x+2 pour x ≠ 2. La limite en x = 2 est bien 4. Une forme 0/0 n'est pas synonyme « pas de limite » — c'est une indétermination à lever.",
+    insight: "Forme 0/0 → toujours tenter de factoriser num et dén pour faire apparaître le facteur commun et le simplifier."
+  },
+  {
+    ctx: "f(x) = x·eˣ",
+    q: "Quelle est f'(x) ?",
+    choices: ["eˣ", "x·eˣ", "(x+1)·eˣ", "eˣ / x"],
+    correct: 2,
+    ok: "Parfait !",
+    ok_body: "Dérivée d'un produit : (u·v)' = u'v + uv'. Ici u = x, v = eˣ → u' = 1, v' = eˣ. Donc f'(x) = 1·eˣ + x·eˣ = (1+x)eˣ.",
+    ko: "Pas tout à fait.",
+    ko_body: "C'est un produit → règle (u·v)' = u'v + uv'. u = x, u' = 1 ; v = eˣ, v' = eˣ. Résultat : f'(x) = eˣ + x·eˣ = (1+x)eˣ. Erreur fréquente : dériver seulement l'un des deux facteurs.",
+    insight: "Réflexe produit : dès que deux fonctions se multiplient, appliquer (u·v)' = u'v + uv'. Ne jamais dériver « terme par terme » dans un produit."
+  },
+  {
+    ctx: "f(x) = ln(3x² + 1)",
+    q: "Quelle est f'(x) ?",
+    choices: ["1 / (3x² + 1)", "6x / (3x² + 1)", "6x · ln(3x² + 1)", "ln(6x)"],
+    correct: 1,
+    ok: "Exact !",
+    ok_body: "Dérivée d'une composée ln(u) : (ln u)' = u'/u. Ici u = 3x²+1, u' = 6x. Donc f'(x) = 6x / (3x²+1).",
+    ko: "Pas tout à fait.",
+    ko_body: "Dérivée d'une composée : f = ln(u) → f' = u'/u. u = 3x²+1, u' = 6x. Donc f'(x) = 6x/(3x²+1). Erreur fréquente : écrire seulement 1/(3x²+1) sans multiplier par u'.",
+    insight: "Formule clé composée : (ln u)' = u'/u. S'il y a une fonction « à l'intérieur » d'une autre, c'est toujours une dérivée composée → ne pas oublier de multiplier par la dérivée de l'intérieur."
+  },
+  {
+    ctx: "f(x) = 2x³ − 9x² + 12x − 1. On a f'(x) = 6x² − 18x + 12 = 6(x−1)(x−2).",
+    q: "Quel est l'extremum local en x = 1 ?",
+    choices: ["Un minimum local", "Un maximum local", "Un point d'inflexion", "Pas d'extremum"],
+    correct: 1,
+    ok: "Bien vu !",
+    ok_body: "f'(1) = 0. On étudie le signe de f' : pour x < 1, f' > 0 (f croissante) ; pour x ∈ (1,2), f' < 0 (f décroissante). f change de croissante à décroissante en x = 1 → maximum local. f(1) = 2 − 9 + 12 − 1 = 4.",
+    ko: "Pas tout à fait.",
+    ko_body: "f'(1) = 0, mais ce n'est pas suffisant. Il faut regarder le signe de f' autour de x = 1 : avant : f' > 0 (croissante) ; après : f' < 0 (décroissante). Le passage croissante → décroissante indique un maximum local.",
+    insight: "f'(a) = 0 seul ne suffit pas : il faut vérifier le changement de signe de f'. Croissant → décroissant = maximum. Décroissant → croissant = minimum. Pas de changement de signe = point d'inflexion."
+  },
+  {
+    ctx: "f(x) = eˣ − x − 1. On cherche à montrer que f(x) ≥ 0 pour tout x réel.",
+    q: "Quelle est la bonne démarche ?",
+    choices: [
+      "Calculer f(0) et conclure",
+      "Dériver, montrer que f admet un minimum en x=0, calculer f(0)=0",
+      "Étudier la limite en +∞ et −∞",
+      "Utiliser le TVI"
+    ],
+    correct: 1,
+    ok: "Exact !",
+    ok_body: "f'(x) = eˣ − 1. f'(x) = 0 ↔ x = 0. Pour x < 0 : f' < 0 (décroissante) ; pour x > 0 : f' > 0 (croissante) → minimum en x = 0. f(0) = 1 − 0 − 1 = 0. Donc f(x) ≥ f(0) = 0 pour tout x.",
+    ko: "Pas tout à fait.",
+    ko_body: "La stratégie correcte : dériver, trouver le minimum global, calculer sa valeur. f'(x) = eˣ − 1, qui s'annule en x = 0 avec passage de − à + → minimum. f(0) = 0, donc f(x) ≥ 0 partout.",
+    insight: "Pour montrer qu'une fonction est positive sur ℝ : trouver son minimum global (par dérivation), puis vérifier que ce minimum vaut ≥ 0."
+  },
+  {
+    ctx: "f(x) = x³ − 3x + 2. On a f''(x) = 6x.",
+    q: "La courbe de f est convexe sur quel intervalle ?",
+    choices: ["(−∞ ; 0)", "[0 ; +∞)", "ℝ entier", "(−1 ; 1)"],
+    correct: 1,
+    ok: "Parfait !",
+    ok_body: "Convexe ↔ f''(x) ≥ 0. f''(x) = 6x ≥ 0 ↔ x ≥ 0. La courbe est convexe sur [0 ; +∞).",
+    ko: "Pas tout à fait.",
+    ko_body: "Convexe ↔ f''(x) ≥ 0 (courbe « souriante »). f''(x) = 6x ≥ 0 ↔ x ≥ 0 → convexe sur [0 ; +∞). Concave ↔ f'' ≤ 0 ↔ x ≤ 0.",
+    insight: "f'' ≥ 0 → convexe (tangentes en dessous de la courbe). f'' ≤ 0 → concave. Point d'inflexion = là où f'' change de signe."
+  },
+  {
+    ctx: "f(x) = ln(x). On cherche l'équation de la tangente à la courbe en x = 1.",
+    q: "Quelle est cette équation ?",
+    choices: ["y = x", "y = x − 1", "y = ln(x) + 1", "y = 1"],
+    correct: 1,
+    ok: "Correct !",
+    ok_body: "Tangente en a : y = f'(a)(x − a) + f(a). f'(x) = 1/x, f'(1) = 1. f(1) = ln(1) = 0. Donc y = 1·(x − 1) + 0 = x − 1.",
+    ko: "Pas tout à fait.",
+    ko_body: "Formule tangente : y = f'(a)(x−a) + f(a). En a=1 : f'(1) = 1/1 = 1, f(1) = 0. Donc y = 1×(x−1) + 0 = x−1. Attention : ne pas confondre avec l'expression de f elle-même.",
+    insight: "Formule tangente à retenir : y = f'(a)(x − a) + f(a). Calculer d'abord f'(a) (pente), puis f(a) (ordonnée du point de contact)."
+  },
+  {
+    ctx: "f(x) = x³ − 3x² + 2. f est continue sur [0 ; 3]. f(0) = 2, f(3) = −4.",
+    q: "Peut-on affirmer qu'il existe c ∈ ]0 ; 3[ tel que f(c) = 0 ?",
+    choices: [
+      "Non, f n'est pas forcément nulle",
+      "Oui, car f est continue et change de signe entre 0 et 3",
+      "Oui, mais seulement si f est dérivable",
+      "Non, il faudrait connaître f' pour conclure"
+    ],
+    correct: 1,
+    ok: "Exact !",
+    ok_body: "TVI (corollaire) : f continue sur [a,b], f(a) et f(b) de signes opposés → il existe au moins un c ∈ ]a,b[ tel que f(c) = 0. Ici f(0)=2 > 0 et f(3)=−4 < 0 → il existe c ∈ ]0;3[ avec f(c) = 0.",
+    ko: "Pas tout à fait.",
+    ko_body: "C'est une application directe du TVI (corollaire de Bolzano) : f continue sur [0,3], f(0)=2>0 et f(3)=−4<0 → signes opposés → existence garantie de c ∈ ]0;3[ tel que f(c)=0. La dérivabilité n'est pas requise pour le TVI.",
+    insight: "TVI, corollaire : f continue sur [a,b] + f(a)·f(b) < 0 → ∃ c ∈ ]a,b[ tel que f(c) = 0. Déclencheur : « montrer qu'une équation a une solution » sur un intervalle."
+  },
+  {
+    ctx: "On cherche lim(x→+∞) de x·e⁻ˣ.",
+    q: "Quelle est cette limite ?",
+    choices: ["+∞", "1", "0", "−∞"],
+    correct: 2,
+    ok: "Bien !",
+    ok_body: "C'est une forme indéterminée ∞×0. On applique les croissances comparées : eˣ croît plus vite que toute puissance de x, donc xeˣ → +∞, ce qui implique x/eˣ = x·e⁻ˣ → 0.",
+    ko: "Pas tout à fait.",
+    ko_body: "Forme ∞ × 0. L'exponentielle l'emporte sur les polynômes (croissances comparées) : eˣ >> x quand x → +∞, donc x·e⁻ˣ = x/eˣ → 0. Résultat fondamental du programme à connaître par cœur.",
+    insight: "Croissances comparées (au programme) : lim(x→+∞) xⁿ·e⁻ˣ = 0 pour tout n. L'exponentielle l'emporte toujours sur les polynômes."
+  }
+];
+
+let current=0, score=0, results=[], answered=false;
+
+function loadQuestion(){
+  answered=false;
+  const q=Q[current];
+  document.getElementById('q-context').innerHTML=q.ctx;
+  document.getElementById('q-num').textContent=`Question ${current+1} sur ${Q.length}`;
+  document.getElementById('q-text').textContent=q.q;
+  const fb=document.getElementById('feedback');
+  fb.className='feedback';
+  document.getElementById('next-btn').className='next-btn';
+  const cc=document.getElementById('choices');
+  cc.innerHTML='';
+  ['A','B','C','D'].forEach((l,i)=>{
+    const b=document.createElement('button');
+    b.className='choice';
+    b.innerHTML=`<span class="choice-letter">${l}</span>${q.choices[i]}`;
+    b.onclick=()=>answer(i);
+    cc.appendChild(b);
+  });
+  updateProgress();
+  const card=document.getElementById('quiz-card');
+  card.style.animation='none'; card.offsetHeight; card.style.animation='slideIn 0.35s cubic-bezier(0.4,0,0.2,1)';
+}
+
+function answer(idx){
+  if(answered)return; answered=true;
+  const q=Q[current];
+  const btns=document.querySelectorAll('.choice');
+  btns.forEach(b=>b.disabled=true);
+  const ok=idx===q.correct;
+  results.push(ok); if(ok) score++;
+  btns[q.correct].className='choice correct';
+  if(!ok) btns[idx].className='choice wrong';
+  const fb=document.getElementById('feedback');
+  document.getElementById('fb-icon').textContent=ok?'✓':'✗';
+  document.getElementById('fb-icon').className='fb-icon '+(ok?'ok':'ko');
+  document.getElementById('fb-head-text').textContent=ok?q.ok:q.ko;
+  document.getElementById('fb-body').innerHTML=ok?q.ok_body:q.ko_body;
+  const ins=document.getElementById('fb-insight');
+  if(q.insight){ ins.innerHTML=`<strong>Réflexe :</strong> ${q.insight}`; ins.style.display='block'; } else { ins.style.display='none'; }
+  fb.className='feedback show '+(ok?'ok':'ko');
+  const nb=document.getElementById('next-btn');
+  nb.textContent=current<Q.length-1?'Question suivante →':'Voir mon score';
+  nb.className='next-btn show';
+  updateProgress();
+}
+
+function nextQuestion(){ current++; if(current>=Q.length){showScore();return;} loadQuestion(); }
+
+function updateProgress(){
+  document.getElementById('prog-label').textContent=`Question ${Math.min(current+1,Q.length)} / ${Q.length}`;
+  document.getElementById('prog-score').textContent=`${score} correcte(s)`;
+  document.getElementById('prog-fill').style.width=(results.length/Q.length*100)+'%';
+}
+
+function showScore(){
+  document.getElementById('quiz-card').style.display='none';
+  document.getElementById('progress-wrap').style.display='none';
+  const msgs=["Reprendre les bases : limites, dérivées usuelles et règles de dérivation.","Des lacunes sur certaines techniques. Revoir dérivée composée et TVI.","En bonne voie. Consolider les croissances comparées et la convexité.","Très bon résultat. Les automatismes sont bien en place.","Excellent ! Tu maîtrises parfaitement les fonctions pour le bac."];
+  const mi=score<=2?0:score<=4?1:score<=6?2:score<=8?3:4;
+  document.getElementById('score-frac').innerHTML=`<span>${score}</span><span class="denom"> / ${Q.length}</span>`;
+  document.getElementById('score-msg').textContent=msgs[mi];
+  const recap=document.getElementById('recap-grid');
+  recap.innerHTML='';
+  Q.forEach((q,i)=>{
+    const d=document.createElement('div'); d.className='recap-item';
+    d.innerHTML=`<div class="recap-dot ${results[i]?'ok':'ko'}"></div><div class="recap-q"><strong>Q${i+1}</strong>${q.q.substring(0,55)}…</div>`;
+    recap.appendChild(d);
+  });
+  document.getElementById('score-screen').className='score-screen show';
+}
+
+function restart(){ current=0;score=0;results=[];answered=false; document.getElementById('quiz-card').style.display='block'; document.getElementById('progress-wrap').style.display='block'; document.getElementById('score-screen').className='score-screen'; loadQuestion(); }
+
+loadQuestion();
+</script>
+</body>
+</html>

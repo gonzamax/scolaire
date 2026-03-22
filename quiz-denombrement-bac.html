@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dénombrement — Entraînement Bac</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Syne:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0e0e0f;
+    --surface: #161618;
+    --surface2: #1e1e21;
+    --border: rgba(255,255,255,0.08);
+    --border2: rgba(255,255,255,0.14);
+    --text: #f0efe8;
+    --muted: #8a8a8a;
+    --accent: #c8f060;
+    --accent-dim: rgba(200,240,96,0.12);
+    --accent-border: rgba(200,240,96,0.35);
+    --red: #ff6b6b;
+    --red-dim: rgba(255,107,107,0.1);
+    --red-border: rgba(255,107,107,0.3);
+    --gold: #f5c842;
+    --gold-dim: rgba(245,200,66,0.1);
+    --radius: 10px;
+    --radius-lg: 16px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Syne', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 1rem 4rem;
+  }
+
+  /* ── Header ── */
+  header {
+    width: 100%;
+    max-width: 720px;
+    padding: 3rem 0 2.5rem;
+    border-bottom: 0.5px solid var(--border2);
+    margin-bottom: 2.5rem;
+  }
+
+  .header-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--accent);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 0.75rem;
+  }
+
+  h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(2rem, 5vw, 3rem);
+    font-weight: 400;
+    line-height: 1.15;
+    color: var(--text);
+    margin-bottom: 0.75rem;
+  }
+
+  h1 em {
+    font-style: italic;
+    color: var(--accent);
+  }
+
+  .header-sub {
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  /* ── Progress bar ── */
+  .progress-bar-wrap {
+    width: 100%;
+    max-width: 720px;
+    margin-bottom: 2rem;
+  }
+
+  .progress-meta {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: var(--muted);
+    font-family: 'DM Mono', monospace;
+    margin-bottom: 8px;
+  }
+
+  .progress-track {
+    height: 3px;
+    background: var(--surface2);
+    border-radius: 99px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: var(--accent);
+    border-radius: 99px;
+    transition: width 0.5s cubic-bezier(0.4,0,0.2,1);
+  }
+
+  /* ── Quiz card ── */
+  .quiz-card {
+    width: 100%;
+    max-width: 720px;
+    background: var(--surface);
+    border: 0.5px solid var(--border2);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    animation: slideIn 0.35s cubic-bezier(0.4,0,0.2,1);
+  }
+
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .card-top {
+    padding: 1.5rem 1.75rem 1.25rem;
+    border-bottom: 0.5px solid var(--border);
+  }
+
+  .context-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 0.5rem;
+  }
+
+  .context-text {
+    font-size: 13px;
+    color: rgba(240,239,232,0.6);
+    line-height: 1.65;
+    padding: 10px 14px;
+    background: var(--surface2);
+    border-radius: var(--radius);
+    border-left: 2px solid var(--border2);
+  }
+
+  .card-body {
+    padding: 1.5rem 1.75rem;
+  }
+
+  .question-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 0.06em;
+    margin-bottom: 0.6rem;
+  }
+
+  .question-text {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.2rem;
+    font-weight: 400;
+    line-height: 1.45;
+    color: var(--text);
+    margin-bottom: 1.5rem;
+  }
+
+  .choices-label {
+    font-size: 11px;
+    font-family: 'DM Mono', monospace;
+    color: var(--muted);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+
+  .choices {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 1.25rem;
+  }
+
+  @media (max-width: 500px) {
+    .choices { grid-template-columns: 1fr; }
+  }
+
+  .choice {
+    background: var(--surface2);
+    border: 0.5px solid var(--border2);
+    border-radius: var(--radius);
+    padding: 12px 15px;
+    font-size: 13px;
+    font-family: 'DM Mono', monospace;
+    color: var(--text);
+    cursor: pointer;
+    text-align: left;
+    line-height: 1.5;
+    transition: background 0.15s, border 0.15s, transform 0.1s;
+    position: relative;
+  }
+
+  .choice:hover:not(:disabled) {
+    background: rgba(255,255,255,0.05);
+    border-color: var(--border2);
+    transform: translateY(-1px);
+  }
+
+  .choice:active:not(:disabled) { transform: translateY(0); }
+  .choice:disabled { cursor: default; }
+
+  .choice.correct {
+    background: rgba(200,240,96,0.08);
+    border: 1.5px solid var(--accent-border);
+    color: var(--accent);
+  }
+
+  .choice.wrong {
+    background: var(--red-dim);
+    border: 1.5px solid var(--red-border);
+    color: var(--red);
+    text-decoration: line-through;
+    opacity: 0.7;
+  }
+
+  .choice.highlight {
+    background: var(--gold-dim);
+    border: 1.5px solid rgba(245,200,66,0.4);
+    color: var(--gold);
+  }
+
+  .choice-letter {
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    border-radius: 4px;
+    background: var(--border);
+    font-size: 10px;
+    font-weight: 500;
+    text-align: center;
+    line-height: 18px;
+    margin-right: 8px;
+    vertical-align: middle;
+    flex-shrink: 0;
+  }
+
+  .choice.correct .choice-letter { background: rgba(200,240,96,0.2); color: var(--accent); }
+  .choice.wrong .choice-letter { background: rgba(255,107,107,0.15); color: var(--red); }
+  .choice.highlight .choice-letter { background: rgba(245,200,66,0.15); color: var(--gold); }
+
+  /* ── Feedback ── */
+  .feedback {
+    border-radius: var(--radius);
+    padding: 14px 16px;
+    font-size: 13px;
+    line-height: 1.75;
+    margin-bottom: 1.25rem;
+    display: none;
+    animation: fadeIn 0.25s ease;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(4px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .feedback.show { display: block; }
+
+  .feedback.ok {
+    background: rgba(200,240,96,0.06);
+    border: 0.5px solid var(--accent-border);
+    color: rgba(200,240,96,0.85);
+  }
+
+  .feedback.ko {
+    background: var(--red-dim);
+    border: 0.5px solid var(--red-border);
+    color: rgba(255,150,150,0.9);
+  }
+
+  .feedback .fb-head {
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 6px;
+    font-size: 13px;
+  }
+
+  .fb-icon {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  .fb-icon.ok { background: var(--accent); color: #0e0e0f; }
+  .fb-icon.ko { background: var(--red); color: #0e0e0f; }
+
+  code {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    background: rgba(255,255,255,0.07);
+    padding: 1px 5px;
+    border-radius: 4px;
+  }
+
+  /* ── Key insight ── */
+  .insight {
+    background: rgba(255,255,255,0.025);
+    border-left: 2px solid rgba(255,255,255,0.15);
+    border-radius: 0 var(--radius) var(--radius) 0;
+    padding: 10px 14px;
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.6;
+    margin-top: 8px;
+  }
+
+  .insight strong { color: rgba(240,239,232,0.6); font-weight: 500; }
+
+  /* ── Bouton suivant ── */
+  .next-btn {
+    background: var(--accent);
+    color: #0e0e0f;
+    border: none;
+    border-radius: var(--radius);
+    padding: 11px 24px;
+    font-family: 'Syne', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    display: none;
+    transition: opacity 0.15s, transform 0.1s;
+  }
+
+  .next-btn:hover { opacity: 0.88; transform: translateY(-1px); }
+  .next-btn:active { transform: translateY(0); }
+  .next-btn.show { display: inline-block; }
+
+  /* ── Score final ── */
+  .score-screen {
+    width: 100%;
+    max-width: 720px;
+    display: none;
+    animation: slideIn 0.4s cubic-bezier(0.4,0,0.2,1);
+  }
+
+  .score-screen.show { display: block; }
+
+  .score-hero {
+    background: var(--surface);
+    border: 0.5px solid var(--border2);
+    border-radius: var(--radius-lg);
+    padding: 3rem 2rem;
+    text-align: center;
+    margin-bottom: 1.5rem;
+  }
+
+  .score-fraction {
+    font-family: 'DM Serif Display', serif;
+    font-size: 5rem;
+    font-weight: 400;
+    line-height: 1;
+    margin-bottom: 0.5rem;
+  }
+
+  .score-fraction span { color: var(--accent); }
+  .score-fraction .denom { color: var(--muted); font-size: 3rem; }
+
+  .score-msg {
+    font-size: 15px;
+    color: var(--muted);
+    line-height: 1.6;
+    max-width: 400px;
+    margin: 0 auto 2rem;
+  }
+
+  .score-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .btn-restart {
+    background: transparent;
+    color: var(--text);
+    border: 0.5px solid var(--border2);
+    border-radius: var(--radius);
+    padding: 10px 22px;
+    font-family: 'Syne', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+
+  .btn-restart:hover { background: var(--surface2); }
+
+  /* ── Recap ── */
+  .recap-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 8px;
+  }
+
+  .recap-item {
+    background: var(--surface);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius);
+    padding: 12px 14px;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .recap-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-top: 5px;
+    flex-shrink: 0;
+  }
+
+  .recap-dot.ok { background: var(--accent); }
+  .recap-dot.ko { background: var(--red); }
+
+  .recap-q {
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+
+  .recap-q strong { color: var(--text); display: block; font-size: 13px; margin-bottom: 2px; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-tag">Terminale · Spécialité Maths · Bac 2026</div>
+  <h1>Dénombrement —<br><em>Combinaison ou arrangement ?</em></h1>
+  <p class="header-sub">10 questions progressives. Pour chaque situation, identifie la bonne formule avant de calculer.</p>
+</header>
+
+<div class="progress-bar-wrap" id="progress-wrap">
+  <div class="progress-meta">
+    <span id="prog-label">Question 1 / 10</span>
+    <span id="prog-score">0 correcte(s)</span>
+  </div>
+  <div class="progress-track">
+    <div class="progress-fill" id="prog-fill" style="width:0%"></div>
+  </div>
+</div>
+
+<div class="quiz-card" id="quiz-card">
+  <div class="card-top">
+    <div class="context-label">Situation</div>
+    <div class="context-text" id="q-context"></div>
+  </div>
+  <div class="card-body">
+    <div class="question-num" id="q-num"></div>
+    <div class="question-text" id="q-text"></div>
+    <div class="choices-label">Quelle formule utilises-tu ?</div>
+    <div class="choices" id="choices"></div>
+    <div class="feedback" id="feedback">
+      <div class="fb-head"><span class="fb-icon" id="fb-icon"></span><span id="fb-head-text"></span></div>
+      <div id="fb-body"></div>
+      <div class="insight" id="fb-insight" style="display:none"></div>
+    </div>
+    <button class="next-btn" id="next-btn" onclick="nextQuestion()">Question suivante →</button>
+  </div>
+</div>
+
+<div class="score-screen" id="score-screen">
+  <div class="score-hero">
+    <div class="score-fraction" id="score-frac"></div>
+    <p class="score-msg" id="score-msg"></p>
+    <div class="score-actions">
+      <button class="btn-restart" onclick="restart()">↺ Recommencer</button>
+    </div>
+  </div>
+  <div class="recap-grid" id="recap-grid"></div>
+</div>
+
+<script>
+const Q = [
+  {
+    ctx: "Une classe de 25 élèves doit envoyer 3 représentants à une réunion. Les 3 représentants ont exactement le même rôle.",
+    q: "Combien de groupes de 3 représentants peut-on former ?",
+    choices: ["C(25, 3) = 2 300", "A(25, 3) = 13 800", "25³ = 15 625", "3! = 6"],
+    correct: 0,
+    ok: "Bonne réponse !",
+    ok_body: "Les 3 représentants ont le même rôle : permuter les 3 choisis ne change pas le groupe. L'ordre ne compte pas → <code>C(25,3) = (25×24×23) / (3×2×1) = 2 300</code>.",
+    ko: "Pas tout à fait.",
+    ko_body: "Les 3 représentants ont le même rôle : permuter les 3 choisis ne change pas le groupe. L'ordre <em>ne compte pas</em> → combinaison : <code>C(25,3) = 2 300</code>.",
+    insight: "Réflexe : « si je permute les choisis, est-ce que j'obtiens une situation différente ? » Ici non → combinaison."
+  },
+  {
+    ctx: "Une course de karting oppose 8 pilotes. On attribue une médaille d'or, d'argent et de bronze.",
+    q: "Combien de podiums distincts peut-on obtenir ?",
+    choices: ["C(8, 3) = 56", "A(8, 3) = 336", "8³ = 512", "8! = 40 320"],
+    correct: 1,
+    ok: "Exactement !",
+    ok_body: "Or ≠ argent ≠ bronze : Alice 1ère et Bob 2ème est différent de Bob 1er et Alice 2ème. L'ordre compte → <code>A(8,3) = 8×7×6 = 336</code>.",
+    ko: "Attention.",
+    ko_body: "Les médailles sont différentes : l'ordre d'attribution crée des situations distinctes. L'ordre <em>compte</em> → arrangement : <code>A(8,3) = 8×7×6 = 336</code>. C(8,3) = 56 aurait donné des groupes sans rang.",
+    insight: "Le mot « podium » est un déclencheur quasi-automatique de l'arrangement : les places sont différentes."
+  },
+  {
+    ctx: "On tire 5 cartes simultanément dans un jeu de 32 cartes.",
+    q: "Combien de mains de 5 cartes peut-on former ?",
+    choices: ["A(32, 5) = 24 165 120", "C(32, 5) = 201 376", "32⁵ = 33 554 432", "5! = 120"],
+    correct: 1,
+    ok: "Parfait !",
+    ok_body: "« Simultanément » = la main {A♠, 3♥, 7♦, J♣, 9♠} est la même quel que soit l'ordre de tirage. L'ordre ne compte pas → <code>C(32,5) = 201 376</code>.",
+    ko: "Presque.",
+    ko_body: "« Simultanément » signifie que l'ordre de tirage ne change pas la main. L'ordre <em>ne compte pas</em> → combinaison : <code>C(32,5) = 201 376</code>. A(32,5) aurait compté chaque main 5! = 120 fois.",
+    insight: "« Simultanément » et « main de cartes » sont des déclencheurs de combinaison : c'est un ensemble, pas une séquence."
+  },
+  {
+    ctx: "Un code PIN est formé de 4 chiffres (0 à 9). Un même chiffre peut apparaître plusieurs fois.",
+    q: "Combien de codes PIN différents existe-t-il ?",
+    choices: ["C(10, 4) = 210", "A(10, 4) = 5 040", "10⁴ = 10 000", "C(10,4) × 4! = 5 040"],
+    correct: 2,
+    ok: "Très bien !",
+    ok_body: "Répétition autorisée + ordre compte (1234 ≠ 4321) → ni C ni A classique. Chaque position est un choix indépendant parmi 10 → <code>10⁴ = 10 000</code>.",
+    ko: "Attention au piège !",
+    ko_body: "La répétition est autorisée (0000 est valide) ET l'ordre compte. Ce ne sont donc ni une combinaison ni un arrangement sans répétition. Chaque position : 10 choix indépendants → <code>10 × 10 × 10 × 10 = 10 000</code>.",
+    insight: "Quand la répétition est autorisée ET que l'ordre compte : règle du produit, pas les formules C ou A."
+  },
+  {
+    ctx: "Dans un comité de 12 personnes, on élit un président, un secrétaire et un trésorier. Une personne ne peut occuper qu'un seul poste.",
+    q: "Combien de façons peut-on pourvoir ces 3 postes ?",
+    choices: ["C(12, 3) = 220", "A(12, 3) = 1 320", "12³ = 1 728", "3 × 12 = 36"],
+    correct: 1,
+    ok: "Exactement !",
+    ok_body: "Les 3 postes sont distincts : président ≠ secrétaire ≠ trésorier. L'ordre compte → <code>A(12,3) = 12×11×10 = 1 320</code>.",
+    ko: "Pas tout à fait.",
+    ko_body: "Président, secrétaire, trésorier sont des rôles différents : les affecter dans un autre ordre crée une situation différente. L'ordre compte → arrangement : <code>A(12,3) = 12×11×10 = 1 320</code>.",
+    insight: "Dès que des rôles ou titres distincts sont attribués, c'est un arrangement."
+  },
+  {
+    ctx: "On dispose des lettres A, B, C, D, E, F, G (7 lettres toutes différentes).",
+    q: "Combien de « mots » de 4 lettres différentes peut-on écrire ? (ABD ≠ BAD)",
+    choices: ["C(7, 4) = 35", "A(7, 4) = 840", "7⁴ = 2 401", "4! = 24"],
+    correct: 1,
+    ok: "Correct !",
+    ok_body: "ABD et BAD sont deux mots différents : l'ordre des lettres compte. Sans répétition → <code>A(7,4) = 7×6×5×4 = 840</code>.",
+    ko: "Attention.",
+    ko_body: "L'énoncé précise que ABD ≠ BAD : l'ordre compte. Sans répétition → arrangement : <code>A(7,4) = 7×6×5×4 = 840</code>. C(7,4) = 35 ne compte que les sélections de 4 lettres sans tenir compte de l'ordre.",
+    insight: "Dès que l'énoncé donne des exemples comme ABD ≠ BAD, il confirme que l'ordre compte → arrangement."
+  },
+  {
+    ctx: "Un tiercé classique en hippisme consiste à trouver les 3 premiers chevaux d'une course dans l'ordre exact. Il y a 10 chevaux en compétition.",
+    q: "Combien de tiercés dans l'ordre sont possibles ?",
+    choices: ["C(10, 3) = 120", "A(10, 3) = 720", "C(10,3) × 3! = 720", "10³ = 1 000"],
+    correct: 1,
+    ok: "Bonne réponse !",
+    ok_body: "« Dans l'ordre exact » : l'ordre des 3 premiers chevaux est important. L'ordre compte → <code>A(10,3) = 10×9×8 = 720</code>.",
+    ko: "Pas tout à fait.",
+    ko_body: "L'énoncé précise « dans l'ordre exact » : l'ordre compte. Arrangement : <code>A(10,3) = 10×9×8 = 720</code>. Attention : C(10,3) × 3! = 120 × 6 = 720 également, car multiplier une combinaison par k! redonne l'arrangement.",
+    insight: "« Dans l'ordre » dans un énoncé = arrangement. C'est un des déclencheurs les plus fiables."
+  },
+  {
+    ctx: "Un jeu de 52 cartes. On tire 5 cartes. On cherche les mains contenant exactement 2 rois (il y a 4 rois dans le jeu).",
+    q: "Combien de ces mains contiennent exactement 2 rois ?",
+    choices: ["C(4,2) × C(48,3) = 103 776", "A(4,2) × A(48,3) = 497 280", "C(52,5) = 2 598 960", "C(4,2) + C(48,3) = 17 302"],
+    correct: 0,
+    ok: "Excellent !",
+    ok_body: "Deux choix indépendants → règle du produit.<br>• Choisir 2 rois parmi 4 : <code>C(4,2) = 6</code><br>• Choisir 3 non-rois parmi 48 : <code>C(48,3) = 17 296</code><br>Total : <code>6 × 17 296 = 103 776</code>",
+    ko: "Pas tout à fait.",
+    ko_body: "Il faut décomposer en deux choix indépendants et multiplier (règle du produit) :<br>• 2 rois parmi 4 : <code>C(4,2) = 6</code><br>• 3 cartes parmi les 48 non-rois : <code>C(48,3) = 17 296</code><br>Total : <code>6 × 17 296 = 103 776</code>. On additionne jamais deux combinaisons pour deux groupes distincts — on multiplie.",
+    insight: "Quand l'énoncé mélange deux populations (rois / non-rois), on fait C() pour chaque groupe puis on multiplie."
+  },
+  {
+    ctx: "Un professeur dispose de 8 exercices de dénombrement et 6 exercices d'analyse. Il compose un devoir contenant 1 exercice de dénombrement ET 1 exercice d'analyse. L'ordre des exercices dans le devoir n'a pas d'importance.",
+    q: "Combien de devoirs différents peut-il composer ?",
+    choices: ["C(14, 2) = 91", "8 + 6 = 14", "8 × 6 = 48", "A(14, 2) = 182"],
+    correct: 2,
+    ok: "Exact !",
+    ok_body: "Deux choix indépendants de populations distinctes → règle du produit.<br>• 1 exercice parmi 8 de dénombrement : 8 façons<br>• 1 exercice parmi 6 d'analyse : 6 façons<br>Total : <code>8 × 6 = 48</code>.",
+    ko: "Pas tout à fait.",
+    ko_body: "Les deux exercices viennent de catégories différentes et sont choisis indépendamment → règle du produit : <code>8 × 6 = 48</code>. On additionne seulement quand les cas sont <em>exclusifs</em> ; ici ils se combinent → on multiplie.",
+    insight: "Règle du produit : deux choix indépendants de populations distinctes → on multiplie. Règle de la somme : deux cas qui s'excluent → on additionne."
+  },
+  {
+    ctx: "Un comité de 10 personnes doit choisir un groupe de travail de 4 membres. On sait que parmi les 10, 3 sont des experts. Le groupe doit contenir au moins 1 expert.",
+    q: "Combien de groupes de 4 contiennent au moins 1 expert ?",
+    choices: ["C(10,4) − C(7,4) = 175", "C(3,1) × C(7,3) = 105", "C(3,1) + C(7,3) = 38", "C(10,4) = 210"],
+    correct: 0,
+    ok: "Parfait !",
+    ok_body: "Méthode du complémentaire : « au moins 1 expert » = Total − « aucun expert ».<br><code>C(10,4) = 210</code> (total)<br><code>C(7,4) = 35</code> (groupes sans expert, parmi les 7 non-experts)<br>Résultat : <code>210 − 35 = 175</code>.",
+    ko: "Attention.",
+    ko_body: "« Au moins 1 expert » → penser complémentaire : Total − « aucun expert ».<br><code>C(10,4) − C(7,4) = 210 − 35 = 175</code>.<br>Calculer directement (1 expert + 2 experts + 3 experts) est plus long et source d'erreurs.",
+    insight: "Réflexe bac : « au moins un » → complémentaire systématiquement. Total − cas sans aucun = résultat en une ligne."
+  }
+];
+
+let current = 0;
+let score = 0;
+let results = [];
+let answered = false;
+
+function loadQuestion() {
+  answered = false;
+  const q = Q[current];
+  document.getElementById('q-context').innerHTML = q.ctx;
+  document.getElementById('q-num').textContent = `Question ${current + 1} sur ${Q.length}`;
+  document.getElementById('q-text').textContent = q.q;
+
+  const fb = document.getElementById('feedback');
+  fb.className = 'feedback';
+  document.getElementById('next-btn').className = 'next-btn';
+
+  const cc = document.getElementById('choices');
+  cc.innerHTML = '';
+  const letters = ['A','B','C','D'];
+  q.choices.forEach((c, i) => {
+    const b = document.createElement('button');
+    b.className = 'choice';
+    b.innerHTML = `<span class="choice-letter">${letters[i]}</span>${c}`;
+    b.onclick = () => answer(i);
+    cc.appendChild(b);
+  });
+
+  updateProgress();
+
+  const card = document.getElementById('quiz-card');
+  card.style.animation = 'none';
+  card.offsetHeight;
+  card.style.animation = 'slideIn 0.35s cubic-bezier(0.4,0,0.2,1)';
+}
+
+function answer(idx) {
+  if (answered) return;
+  answered = true;
+  const q = Q[current];
+  const btns = document.querySelectorAll('.choice');
+  btns.forEach(b => b.disabled = true);
+
+  const ok = idx === q.correct;
+  results.push(ok);
+  if (ok) score++;
+
+  btns[q.correct].className = 'choice correct';
+  if (!ok) btns[idx].className = 'choice wrong';
+
+  const fb = document.getElementById('feedback');
+  const fbIcon = document.getElementById('fb-icon');
+  const fbHead = document.getElementById('fb-head-text');
+  const fbBody = document.getElementById('fb-body');
+  const fbInsight = document.getElementById('fb-insight');
+
+  fbIcon.textContent = ok ? '✓' : '✗';
+  fbIcon.className = 'fb-icon ' + (ok ? 'ok' : 'ko');
+  fbHead.textContent = ok ? q.ok : q.ko;
+  fbBody.innerHTML = ok ? q.ok_body : q.ko_body;
+
+  if (q.insight) {
+    fbInsight.innerHTML = `<strong>Réflexe :</strong> ${q.insight}`;
+    fbInsight.style.display = 'block';
+  } else {
+    fbInsight.style.display = 'none';
+  }
+
+  fb.className = 'feedback show ' + (ok ? 'ok' : 'ko');
+
+  const nb = document.getElementById('next-btn');
+  nb.textContent = current < Q.length - 1 ? 'Question suivante →' : 'Voir mon score';
+  nb.className = 'next-btn show';
+
+  updateProgress();
+}
+
+function nextQuestion() {
+  current++;
+  if (current >= Q.length) { showScore(); return; }
+  loadQuestion();
+}
+
+function updateProgress() {
+  const done = results.length;
+  document.getElementById('prog-label').textContent = `Question ${Math.min(current+1, Q.length)} / ${Q.length}`;
+  document.getElementById('prog-score').textContent = `${score} correcte(s)`;
+  document.getElementById('prog-fill').style.width = (done / Q.length * 100) + '%';
+}
+
+function showScore() {
+  document.getElementById('quiz-card').style.display = 'none';
+  document.getElementById('progress-wrap').style.display = 'none';
+
+  const msgs = [
+    "Retravailler la méthode de décision depuis le début — les formules ne suffisent pas sans le bon déclencheur.",
+    "Des bases à consolider. Refaire l'exercice en lisant attentivement les feedbacks.",
+    "En bonne voie. Encore quelques automatismes à ancrer, notamment sur le complémentaire.",
+    "Très bon résultat. Le réflexe combinaison/arrangement est bien intégré.",
+    "Excellent ! Tu maîtrises parfaitement le dénombrement pour le bac."
+  ];
+  const mi = score <= 3 ? 0 : score <= 5 ? 1 : score <= 7 ? 2 : score <= 9 ? 3 : 4;
+
+  document.getElementById('score-frac').innerHTML = `<span>${score}</span><span class="denom"> / ${Q.length}</span>`;
+  document.getElementById('score-msg').textContent = msgs[mi];
+
+  const recap = document.getElementById('recap-grid');
+  recap.innerHTML = '';
+  Q.forEach((q, i) => {
+    const d = document.createElement('div');
+    d.className = 'recap-item';
+    d.innerHTML = `<div class="recap-dot ${results[i] ? 'ok' : 'ko'}"></div><div class="recap-q"><strong>Q${i+1}</strong>${q.q.substring(0, 55)}…</div>`;
+    recap.appendChild(d);
+  });
+
+  document.getElementById('score-screen').className = 'score-screen show';
+}
+
+function restart() {
+  current = 0; score = 0; results = []; answered = false;
+  document.getElementById('quiz-card').style.display = 'block';
+  document.getElementById('progress-wrap').style.display = 'block';
+  document.getElementById('score-screen').className = 'score-screen';
+  loadQuestion();
+}
+
+loadQuestion();
+</script>
+</body>
+</html>
